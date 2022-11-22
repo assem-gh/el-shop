@@ -5,15 +5,14 @@ import com.elshop.backend.common.AppUtils;
 import com.elshop.backend.product.model.Product;
 import com.elshop.backend.product.model.request.ProductRequest;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
- class ProductUnitTest {
+
+class ProductUnitTest {
 
     private final ProductRepository mockRepository = mock(ProductRepository.class);
     private final AppUtils utils = new AppUtils();
