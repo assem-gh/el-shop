@@ -1,21 +1,22 @@
 package com.elshop.backend.exception;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public record ErrorResponse(
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
-        LocalDateTime timestamp,
+
+        String timestamp,
         String type,
         String message,
         Object data
 
 ) {
 
-        public ErrorResponse(String type,String message, Object errors){
-                this(LocalDateTime.now(),type,message,errors);
-        }
+    public ErrorResponse(String type, String message, Object errors) {
+        this(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss")),
+                type, message, errors);
+
+    }
 }
 
 
