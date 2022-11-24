@@ -28,8 +28,8 @@ public class ProductController {
 
 
     @GetMapping("{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable String id) {
-        return new ResponseEntity<>(service.getById(id), HttpStatus.OK);
+    public Product getProductById(@PathVariable String id) {
+        return service.getById(id);
     }
 
 
