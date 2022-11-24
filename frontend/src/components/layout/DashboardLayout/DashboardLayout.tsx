@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { AppShell, Box } from "@mantine/core";
 
-import SideNav from "../SideNAv/SideNav";
+import SideNav from "../SideNav/SideNav";
 import Header from "../Header/Header";
 
 interface DashboardLayoutProps {
