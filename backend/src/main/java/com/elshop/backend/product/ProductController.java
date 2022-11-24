@@ -19,6 +19,12 @@ public class ProductController {
 
     private final ProductService service;
 
+    @GetMapping("{id}")
+    public ResponseEntity<Product> getProductById(@PathVariable String id) {
+        return new ResponseEntity<>(service.getById(id), HttpStatus.OK);
+    }
+
+
     @PostMapping
     public ResponseEntity<Product> createNewProduct(@RequestBody @Valid ProductRequest newProductData) {
         return new ResponseEntity<>(service.createNewProduct(newProductData), HttpStatus.OK);
