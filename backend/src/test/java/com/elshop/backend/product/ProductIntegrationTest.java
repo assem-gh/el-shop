@@ -111,24 +111,6 @@ class ProductIntegrationTest {
 
     @Test
     @DirtiesContext
-    void getNonExistProductWithId() throws Exception {
-        String idToTest = "few65j453otlg";
-
-        mvc.perform(MockMvcRequestBuilders.get("/api/products/" + idToTest))
-                .andExpect(status().isNotFound())
-                .andExpect(content().json("""
-                        {
-                            "type":"Not Found",
-                            "message":"We could not find the resource you requested.",
-                            "data":{
-                                "error":"Product with id: few65j453otlg, Does not exist!"
-                            }
-                        }
-                                                 """));
-    }
-
-    @Test
-    @DirtiesContext
     void getEmptyProductsList() throws Exception {
         int page = 0;
         int size = 5;
