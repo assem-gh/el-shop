@@ -1,4 +1,4 @@
 package com.elshop.backend.exception;
 
-public record ErrorMessage(String message) {
+public record ErrorMessage(String error) {
 }

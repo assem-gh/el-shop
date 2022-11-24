@@ -20,6 +20,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -81,5 +82,48 @@ class ProductIntegrationTest {
         assertEquals("Invalid syntax for this request was provided", response.message());
         assertEquals(response.data().getClass(), ArrayList.class);
         assertEquals(1, errorMessages.size());
+    }
+
+    @Test
+    @DirtiesContext
+    void getExistProductWithId() throws Exception {
+        String requestProduct = """
+                {
+                "title":"New 7aX 64GB",
+                "price":199.99,
+                "images":[],
+                "category":"Mobile"
+                }
+                """;
+
+        String postResponse = mvc.perform(MockMvcRequestBuilders.post("/api/products")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(requestProduct))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        Product createdProduct = objectMapper.readValue(postResponse, Product.class);
+
+        mvc.perform(MockMvcRequestBuilders.get("/api/products/" + createdProduct.id()))
+                .andExpect(status().isOk())
+                .andExpect(content().json(postResponse));
+    }
+
+    @Test
+    @DirtiesContext
+    void getNonExistProductWithId() throws Exception {
+        String idToTest = "few65j453otlg";
+
+        mvc.perform(MockMvcRequestBuilders.get("/api/products/" + idToTest))
+                .andExpect(status().isNotFound())
+                .andExpect(content().json("""
+                        {
+                            "type":"Not Found",
+                            "message":"We could not find the resource you requested.",
+                            "data":{
+                                "error":"Product with id: few65j453otlg, Does not exist!"
+                            }
+                        }
+                                                 """));
     }
 }

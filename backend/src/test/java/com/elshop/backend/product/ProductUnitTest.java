@@ -2,13 +2,15 @@ package com.elshop.backend.product;
 
 
 import com.elshop.backend.common.AppUtils;
+import com.elshop.backend.exception.ResourceNotFoundException;
 import com.elshop.backend.product.model.Product;
 import com.elshop.backend.product.model.request.ProductRequest;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 
@@ -51,4 +53,28 @@ class ProductUnitTest {
         verify(mockRepository).save(productToTest);
     }
 
+    @Test
+    void getExistProductById() {
+        Product productToTest = new Product(
+                "7146680b-0127-4d9a-a4fe-853e591e28ca",
+                "new-7aX-64gb-3bU3RSXW",
+                "New 7aX 64GB",
+                199.99,
+                new ArrayList<>(),
+                "Mobile"
+        );
+
+        when(mockRepository.findById(productToTest.id())).thenReturn(Optional.of(productToTest));
+        Product actual = productService.getById(productToTest.id());
+        assertEquals(productToTest, actual);
+    }
+
+    @Test
+    void getNonExistProductById() {
+        String idToTest = "gfdt6agtkeweh5";
+        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> productService.getById(idToTest));
+
+        assertEquals("Product with id: gfdt6agtkeweh5, Does not exist!", exception.getErrorDetails());
+
+    }
 }
