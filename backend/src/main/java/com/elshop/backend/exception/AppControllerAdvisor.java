@@ -16,8 +16,7 @@ public class AppControllerAdvisor {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleException(
-            MethodArgumentNotValidException ex) {
+    public ErrorResponse handleException(MethodArgumentNotValidException ex) {
 
         List<FieldError> fieldErrors = ex.getBindingResult().getFieldErrors();
         List<ValidationErrorMessage> errors = fieldErrors.stream()
@@ -26,6 +25,14 @@ public class AppControllerAdvisor {
 
         return new ErrorResponse(HttpStatus.BAD_REQUEST.getReasonPhrase(),
                 "Invalid syntax for this request was provided", errors);
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleException(ResourceNotFoundException ex) {
+        return new ErrorResponse(ResourceNotFoundException.TYPE,
+                ResourceNotFoundException.MESSAGE,
+                new ErrorMessage(ex.getErrorDetails()));
     }
 
     @ExceptionHandler(Exception.class)
