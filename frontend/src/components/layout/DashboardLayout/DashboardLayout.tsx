@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { AppShell } from "@mantine/core";
+import { AppShell, Box } from "@mantine/core";
 
 import SideNav from "../SideNav/SideNav";
 import Header from "../Header/Header";
@@ -25,7 +25,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
       navbar={<SideNav />}
     >
       <Header />
-      {children}
+      <Box p="lg">{children}</Box>
     </AppShell>
   );
 };
