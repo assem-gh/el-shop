@@ -1,21 +1,16 @@
-import React from 'react';
+import React from "react";
 import DashboardLayout from "../../components/layout/DashboardLayout/DashboardLayout";
-import AddProductForm from "../../components/AddProductForm/AddProductForm";
-import {Group, Text} from "@mantine/core";
-import {Outlet} from "react-router-dom";
+import { Group } from "@mantine/core";
+import { Outlet } from "react-router-dom";
 
 const Dashboard = () => {
-    return (
-        <DashboardLayout>
-            <Group mb="md" py="md">
-                <Text>Add New Product</Text>
-            </Group>
-            <Group grow px={32}>
-                <AddProductForm/>
-            </Group>
-            <Outlet/>
-        </DashboardLayout>
-    );
+  return (
+    <DashboardLayout>
+      <Group px={32} position="center">
+        <Outlet />
+      </Group>
+    </DashboardLayout>
+  );
 };
 
 export default Dashboard;
