@@ -3,6 +3,7 @@ import { Collapse, Stack, Text, Tooltip, UnstyledButton } from "@mantine/core";
 import { IconType } from "react-icons";
 import useStyles from "./navGroup.style";
 import { BsDashSquare } from "react-icons/bs";
+import { Link as RouterLink } from "react-router-dom";
 
 interface NavLinksControlProps {
   setActiveGroup: Dispatch<SetStateAction<string>>;
@@ -57,7 +58,11 @@ const NavLinksGroup = ({
                   label={link.label}
                   position="right"
                 >
-                  <UnstyledButton className={cx(classes.flex, classes.navItem)}>
+                  <UnstyledButton
+                    className={cx(classes.flex, classes.navItem)}
+                    component={RouterLink}
+                    to={link.path}
+                  >
                     {collapsed ? (
                       <LinkIcon size={14} />
                     ) : (
