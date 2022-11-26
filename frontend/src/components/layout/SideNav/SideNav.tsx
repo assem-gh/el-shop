@@ -4,35 +4,20 @@ import { Group, Navbar, Stack, Text, UnstyledButton } from "@mantine/core";
 import { SiShopify } from "react-icons/si";
 import NavLinksGroup from "../../NavLinksGroup/NavLinksGroup";
 import { SlArrowLeft, SlArrowRight } from "react-icons/sl";
-import {
-  MdBusiness,
-  MdOutlineAdd,
-  MdOutlineFormatListBulleted,
-} from "react-icons/md";
-
-const groups = [
-  {
-    name: "products",
-    icon: MdBusiness,
-    links: [
-      { label: "Add product", path: "abc1", icon: MdOutlineAdd },
-      { label: "List", path: "abc2", icon: MdOutlineFormatListBulleted },
-    ],
-  },
-];
+import { navLinks } from "../../../data/navLinks";
 
 const SideNav = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [activeGroup, setActiveGroup] = useState("products");
 
-  const navLinks = groups.map((group) => (
+  const navGroups = navLinks.map((link) => (
     <NavLinksGroup
-      key={group.name}
+      key={link.name}
       setActiveGroup={setActiveGroup}
-      isActive={activeGroup === group.name}
+      isActive={activeGroup === link.name}
       collapsed={collapsed}
       setCollapsed={setCollapsed}
-      {...group}
+      {...link}
     />
   ));
 
@@ -53,7 +38,7 @@ const SideNav = () => {
       </Navbar.Section>
 
       <Navbar.Section grow py="md">
-        <Stack spacing={0}>{navLinks}</Stack>
+        <Stack spacing={0}>{navGroups}</Stack>
       </Navbar.Section>
 
       <Navbar.Section>
