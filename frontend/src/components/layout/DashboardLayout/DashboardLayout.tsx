@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { AppShell, Box } from "@mantine/core";
+import { AppShell } from "@mantine/core";
 
 import SideNav from "../SideNav/SideNav";
 import Header from "../Header/Header";
@@ -16,7 +16,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         main: {
           paddingTop: 0,
           paddingRight: 0,
-          backgroundColor: theme.colors.gray[1],
+          backgroundColor: theme.colors.gray[0],
           paddingLeft: "calc(var(--mantine-navbar-width, 0px))",
           transition: "padding 0.2s linear",
         },
@@ -24,7 +24,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
       navbar={<SideNav />}
     >
       <Header />
-      <Box p="lg">{children}</Box>
+      {children}
     </AppShell>
   );
 };
