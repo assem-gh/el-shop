@@ -1,8 +1,4 @@
-import {
-  ColorScheme,
-  ColorSchemeProvider,
-  MantineProvider,
-} from "@mantine/core";
+import { MantineProvider } from "@mantine/core";
 import { Route, Routes } from "react-router-dom";
 import Dashboard from "./pages/dashboard/Dashboard";
 import { useState } from "react";
