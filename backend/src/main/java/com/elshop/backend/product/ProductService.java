@@ -4,7 +4,10 @@ import com.elshop.backend.common.AppUtils;
 import com.elshop.backend.exception.ResourceNotFoundException;
 import com.elshop.backend.product.model.Product;
 import com.elshop.backend.product.model.request.ProductRequest;
+import com.elshop.backend.product.model.response.ProductsListResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -30,12 +33,20 @@ public class ProductService {
         String id = utils.generateUuid();
         String slug = utils.generateSlug(newProductData.title());
 
-        return productRepository.save(
-                new Product(id, slug,
-                        newProductData.title(),
-                        newProductData.price(),
-                        newProductData.images(),
-                        newProductData.category()
-                ));
+        return productRepository.save(new Product(id, slug,
+                newProductData.title(), newProductData.price(),
+                newProductData.images(), newProductData.category()));
+    }
+
+    public ProductsListResponse getAll(int page, int size) {
+        Page<Product> pageProduct = productRepository.findAll(PageRequest.of(page, size));
+
+        return new ProductsListResponse(
+                pageProduct.getTotalElements(),
+                pageProduct.getTotalPages(),
+                pageProduct.getNumber(),
+                pageProduct.hasNext(),
+                pageProduct.getContent()
+        );
     }
 }
