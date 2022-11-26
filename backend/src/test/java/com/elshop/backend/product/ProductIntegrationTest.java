@@ -164,4 +164,60 @@ class ProductIntegrationTest {
                         }
                                                         """.replace("<%>", createdProduct)));
     }
+
+    @Test
+    @DirtiesContext
+    void getEmptyProductsList() throws Exception {
+        int page = 0;
+        int size = 5;
+
+
+        mvc.perform(MockMvcRequestBuilders.get(String.format("/api/products?page=%s&size=%s", page, size)))
+                .andExpect(status().isOk())
+                .andExpect(content().json("""
+                        {
+                            "totalProducts": 0,
+                            "totalPages": 0,
+                            "currentPage": 0,
+                            "hasNext": false,
+                            "products": [
+                                
+                            ]
+                        }
+                                                        """));
+    }
+
+    @Test
+    @DirtiesContext
+    void getProductsList() throws Exception {
+        int page = 0;
+        int size = 5;
+        ProductRequest requestProduct = new ProductRequest(
+                "New 7aX 64GB",
+                199.99,
+                new ArrayList<>(),
+                "Mobile"
+        );
+
+
+        String createdProduct = mvc.perform(MockMvcRequestBuilders.post("/api/products")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(objectMapper.writeValueAsString(requestProduct)))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        mvc.perform(MockMvcRequestBuilders.get(String.format("/api/products?page=%s&size=%s", page, size)))
+                .andExpect(status().isOk())
+                .andExpect(content().json("""
+                        {
+                            "totalProducts": 1,
+                            "totalPages": 1,
+                            "currentPage": 0,
+                            "hasNext": false,
+                            "products": [
+                                <%>
+                            ]
+                        }
+                                                        """.replace("<%>", createdProduct)));
+    }
 }
