@@ -10,6 +10,7 @@ const productAdapter = createEntityAdapter<ProductModel>({
 
 const productSlice = createSlice({
   name: "product",
+
   initialState: productAdapter.getInitialState({
     currentPage: 0,
     hasNext: false,
@@ -26,6 +27,7 @@ const productSlice = createSlice({
       state.hasNext = action.payload.hasNext;
       state.totalProducts = action.payload.totalProducts;
       state.currentPage = action.payload.currentPage;
+
     });
   },
 });
