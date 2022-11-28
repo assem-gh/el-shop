@@ -10,7 +10,11 @@ const productAdapter = createEntityAdapter<ProductModel>({
 
 const productSlice = createSlice({
   name: "product",
-  initialState: productAdapter.getInitialState(),
+  initialState: productAdapter.getInitialState({
+    currentPage: 0,
+    hasNext: false,
+    totalProducts: 0,
+  }),
   reducers: {},
 
   extraReducers(builder) {
@@ -19,6 +23,9 @@ const productSlice = createSlice({
     });
     builder.addCase(productsAPI.getAllProduct.fulfilled, (state, action) => {
       productAdapter.addMany(state, action.payload.products);
+      state.hasNext = action.payload.hasNext;
+      state.totalProducts = action.payload.totalProducts;
+      state.currentPage = action.payload.currentPage;
     });
   },
 });
