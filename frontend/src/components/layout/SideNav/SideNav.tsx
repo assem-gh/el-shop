@@ -21,7 +21,7 @@ const SideNav = () => {
     />
   ));
 
-  const { classes } = useStyles({ collapsed });
+  const { classes, theme } = useStyles({ collapsed });
 
   return (
     <Navbar
@@ -30,7 +30,7 @@ const SideNav = () => {
     >
       <Navbar.Section>
         <Group className={classes.header}>
-          <SiShopify size={42} color="black" />
+          <SiShopify size={42} color={theme.colors.green[6]} />
           <Text ml={-12} weight="bolder" size={24} className={classes.collapse}>
             El Shop
           </Text>
