@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import useStyles from "./appTable.style";
-import { Table } from "@mantine/core";
+import { Paper, Table } from "@mantine/core";
 import TableRow from "./TableRow";
 import { columns } from "../../data/tables";
 import { useAppSelector } from "../../store/hooks";
@@ -17,7 +17,7 @@ const AppTable = ({ entity }: ListPageProps) => {
   const ids = useAppSelector(selectProductsId) as string[];
 
   return (
-    <>
+    <Paper radius="md" shadow="md" p="md">
       <select>
         {fields.map((col) => (
           <option key={col} onChange={() => {}}>
@@ -42,7 +42,7 @@ const AppTable = ({ entity }: ListPageProps) => {
           ))}
         </tbody>
       </Table>
-    </>
+    </Paper>
   );
 };
 

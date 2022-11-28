@@ -1,14 +1,14 @@
 import { createStyles } from "@mantine/core";
+import { getThemeColor } from "../../utils";
 
 const useStyles = createStyles((theme) => ({
   root: {
     width: "100%",
     borderRadius: theme.radius.md,
-    boxShadow: theme.shadows.xs,
+    boxShadow: theme.shadows.sm,
     marginBottom: theme.spacing.lg,
     height: 64,
-    backgroundColor: theme.white,
-    borderBottom: "1px solid" + theme.colors.gray[2],
+    backgroundColor: getThemeColor(theme, 7),
   },
   inner: {
     height: "100%",
