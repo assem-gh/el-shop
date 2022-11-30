@@ -29,13 +29,12 @@ public class ProductService {
         return productToFind.get();
     }
 
-    public Product createNewProduct(ProductRequest newProductData) {
-        String id = utils.generateUuid();
+    public Product createNewProduct(ProductRequest newProductData, String id, List<String> images) {
         String slug = utils.generateSlug(newProductData.title());
 
         return productRepository.save(new Product(id, slug,
                 newProductData.title(), newProductData.price(),
-                newProductData.images(), newProductData.category()));
+                images, newProductData.category()));
     }
 
     public ProductsListResponse getAll(int page, int size) {
