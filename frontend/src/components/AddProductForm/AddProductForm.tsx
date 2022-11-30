@@ -10,13 +10,16 @@ import {
   Stack,
   Text,
   TextInput,
+  useMantineTheme,
 } from "@mantine/core";
 import { useForm, zodResolver } from "@mantine/form";
 import { z } from "zod";
 import { Dropzone, FileWithPath, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import { BiPhotoAlbum } from "react-icons/bi";
-import productsAPI from "../../store/api/productService";
+import productService from "../../store/api/productService";
 import { useAppDispatch } from "../../store/hooks";
+import { TbFileUpload, TbPhoto, TbX } from "react-icons/all";
+import { useNavigate } from "react-router-dom";
 
 const schema = z.object({
   title: z.string().min(3, { message: "Name should have at least 3 letters" }),
@@ -28,7 +31,7 @@ export type NewProductType = z.infer<typeof schema>;
 
 const AddProductForm = () => {
   const [files, setFiles] = useState<FileWithPath[]>([]);
-
+  const theme = useMantineTheme();
   const form = useForm<NewProductType>({
     initialValues: {
       title: "",
@@ -51,10 +54,23 @@ const AddProductForm = () => {
   });
 
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const handleSubmit = async (values: NewProductType) => {
-    const data = { ...values, images: [] };
-    dispatch(productsAPI.createNewProduct(data));
+    const formData = new FormData();
+
+    const json = JSON.stringify(values);
+    const blob = new Blob([json], {
+      type: "application/json",
+    });
+    formData.append("data", blob);
+
+    files.forEach((file) => {
+      formData.append("images", file);
+    });
+
+    dispatch(productService.createNewProduct(formData));
+    navigate("/admin/products/list");
   };
 
   return (
@@ -84,11 +100,36 @@ const AddProductForm = () => {
         <Dropzone
           mt="md"
           accept={IMAGE_MIME_TYPE}
-          onDrop={(v) => setFiles((prev) => [...prev, ...v])}
+          multiple
+          maxFiles={4}
+          onDrop={(v) => {
+            setFiles((prev) => {
+              return [...prev, ...v];
+            });
+          }}
         >
           <Stack justify="center" align="center">
-            <BiPhotoAlbum size={48} />
-            <Text align="center">Drop images here</Text>
+            <Dropzone.Accept>
+              <TbFileUpload
+                size={50}
+                color={
+                  theme.colors[theme.primaryColor][
+                    theme.colorScheme === "dark" ? 4 : 6
+                  ]
+                }
+              />
+              <BiPhotoAlbum size={48} />
+              <Text align="center">Drop images here</Text>
+            </Dropzone.Accept>
+            <Dropzone.Reject>
+              <TbX
+                size={50}
+                color={theme.colors.red[theme.colorScheme === "dark" ? 4 : 6]}
+              />
+            </Dropzone.Reject>
+            <Dropzone.Idle>
+              <TbPhoto size={50} />
+            </Dropzone.Idle>
           </Stack>
         </Dropzone>
 
