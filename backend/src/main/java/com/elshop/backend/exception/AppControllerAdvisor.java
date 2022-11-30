@@ -7,6 +7,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 import java.util.List;
 
@@ -33,6 +34,13 @@ public class AppControllerAdvisor {
         return new ErrorResponse(ResourceNotFoundException.TYPE,
                 ResourceNotFoundException.MESSAGE,
                 new ErrorMessage(ex.getErrorDetails()));
+    }
+
+    @ExceptionHandler(MissingServletRequestPartException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleException(MissingServletRequestPartException ex) {
+        return new ErrorResponse(HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                "Invalid syntax for this request was provided", new ErrorMessage(ex.getMessage()));
     }
 
     @ExceptionHandler(Exception.class)
