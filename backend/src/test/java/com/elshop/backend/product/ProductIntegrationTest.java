@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -26,12 +26,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 class ProductIntegrationTest {
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
     private MockMvc mvc;
-
-    private final ObjectMapper objectMapper = new ObjectMapper();
-
 
     @Test
     @DirtiesContext
@@ -39,41 +37,71 @@ class ProductIntegrationTest {
         ProductRequest requestProduct = new ProductRequest(
                 "New 7aX 64GB",
                 199.99,
-                new ArrayList<>(),
                 "Mobile"
         );
 
-        String content = mvc.perform(MockMvcRequestBuilders.post("/api/products")
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(objectMapper.writeValueAsString(requestProduct)))
-                .andExpect(status().isOk())
+        String requestProductJson = objectMapper.writeValueAsString(requestProduct);
+
+        MockMultipartFile image1 = new MockMultipartFile("images", "image1.jpg", "image/jpeg", "nice image".getBytes());
+        MockMultipartFile image2 = new MockMultipartFile("images", "image2.jpg", "image/jpeg", "another one".getBytes());
+        MockMultipartFile data = new MockMultipartFile("data", "", "application/json", requestProductJson.getBytes());
+
+        String content = mvc.perform(MockMvcRequestBuilders.multipart("/api/products")
+                        .file(image1)
+                        .file(image2)
+                        .file(data)).andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        Product newProduct = objectMapper.readValue(content, Product.class);
 
+        Product newProduct = objectMapper.readValue(content, Product.class);
+        System.out.println(newProduct.images());
         assertFalse(newProduct.id().isEmpty());
+        assertEquals(2, newProduct.images().size());
         assertEquals(newProduct.slug()
                         .substring(0, newProduct.slug().length() - 9)
                         .replace('-', ' '),
                 requestProduct.title().toLowerCase());
+
     }
 
     @Test
     @DirtiesContext
-    void addNotValidProduct() throws Exception {
-        String requestProduct = """
+    void addProductWithoutImages() throws Exception {
+
+        ProductRequest requestProduct = new ProductRequest(
+                "New 7aX 64GB",
+                199.99,
+                "Mobile"
+        );
+        String requestProductJson = objectMapper.writeValueAsString(requestProduct);
+
+        MockMultipartFile data = new MockMultipartFile("data", "", "application/json", requestProductJson.getBytes());
+
+
+        mvc.perform(MockMvcRequestBuilders.multipart("/api/products")
+                .file(data)).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DirtiesContext
+    void addNotValidProductData() throws Exception {
+        String requestProductJson = """
                 {
                 "price":33.33,
-                "images":[],
-                "category":"Mobile"
+                 "category":"Mobile"
                 }
                 """;
 
-        String content = mvc.perform(MockMvcRequestBuilders.post("/api/products")
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(requestProduct))
-                .andExpect(status().isBadRequest())
+        MockMultipartFile image1 = new MockMultipartFile("images", "image1.jpg", "image/jpeg", "nice image".getBytes());
+        MockMultipartFile image2 = new MockMultipartFile("images", "image2.jpg", "image/jpeg", "another one".getBytes());
+        MockMultipartFile data = new MockMultipartFile("data", "", "application/json", requestProductJson.getBytes());
+
+        String content = mvc.perform(MockMvcRequestBuilders.multipart("/api/products")
+                        .file(image1)
+                        .file(image2)
+                        .file(data)).andExpect(status().isBadRequest())
                 .andReturn().getResponse().getContentAsString();
+
 
         ErrorResponse response = objectMapper.readValue(content, ErrorResponse.class);
         List<?> errorMessages = (List<?>) response.data();
@@ -87,7 +115,7 @@ class ProductIntegrationTest {
     @Test
     @DirtiesContext
     void getExistProductWithId() throws Exception {
-        String requestProduct = """
+        String requestProductJson = """
                 {
                 "title":"New 7aX 64GB",
                 "price":199.99,
@@ -96,17 +124,25 @@ class ProductIntegrationTest {
                 }
                 """;
 
-        String postResponse = mvc.perform(MockMvcRequestBuilders.post("/api/products")
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(requestProduct))
-                .andExpect(status().isOk())
+        MockMultipartFile image1 = new MockMultipartFile("images", "image1.jpg", "image/jpeg", "nice image".getBytes());
+        MockMultipartFile image2 = new MockMultipartFile("images", "image2.jpg", "image/jpeg", "another one".getBytes());
+        MockMultipartFile data = new MockMultipartFile("data", "", "application/json", requestProductJson.getBytes());
+
+
+        String postResponse = mvc.perform(MockMvcRequestBuilders.multipart("/api/products")
+                        .file(image1)
+                        .file(image2)
+                        .file(data)).andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
         Product createdProduct = objectMapper.readValue(postResponse, Product.class);
 
-        mvc.perform(MockMvcRequestBuilders.get("/api/products/" + createdProduct.id()))
+        String getResponse = mvc.perform(MockMvcRequestBuilders.get("/api/products/" + createdProduct.id()))
                 .andExpect(status().isOk())
-                .andExpect(content().json(postResponse));
+                .andExpect(content().json(postResponse))
+                .andReturn().getResponse().getContentAsString();
+
+        assertEquals(postResponse, getResponse);
     }
 
     @Test
@@ -154,17 +190,26 @@ class ProductIntegrationTest {
     void getProductsList() throws Exception {
         int page = 0;
         int size = 5;
+
         ProductRequest requestProduct = new ProductRequest(
                 "New 7aX 64GB",
                 199.99,
-                new ArrayList<>(),
+
                 "Mobile"
         );
 
+        String requestProductJson = objectMapper.writeValueAsString(requestProduct);
 
-        String createdProduct = mvc.perform(MockMvcRequestBuilders.post("/api/products")
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(objectMapper.writeValueAsString(requestProduct)))
+
+        MockMultipartFile image1 = new MockMultipartFile("images", "image1.jpg", "image/jpeg", "nice image".getBytes());
+        MockMultipartFile image2 = new MockMultipartFile("images", "image2.jpg", "image/jpeg", "another one".getBytes());
+        MockMultipartFile data = new MockMultipartFile("data", "", "application/json", requestProductJson.getBytes());
+
+
+        String createdProduct = mvc.perform(MockMvcRequestBuilders.multipart("/api/products")
+                        .file(image1)
+                        .file(image2)
+                        .file(data)).andExpect(status().isOk())
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
