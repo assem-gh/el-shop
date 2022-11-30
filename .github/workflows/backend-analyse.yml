@@ -38,5 +38,6 @@ jobs:
           AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY}}
           AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY}}
           AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
+          AWS_TEST_BUCKET_NAME: ${{ secrets.AWS_TEST_BUCKET_NAME }}
         working-directory: backend
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=asem259_el-shop_backend
