@@ -16,7 +16,7 @@ const TableRow = ({ id }: ListItemProps) => {
       <td>
         <img
           style={{ maxHeight: "72px" }}
-          src="https://picsum.photos/600/400.webp"
+          src={data.images[0]}
           alt="place-holder"
         />
       </td>
