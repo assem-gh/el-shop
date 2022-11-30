@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -47,5 +48,14 @@ public class ProductService {
                 pageProduct.hasNext(),
                 pageProduct.getContent()
         );
+    }
+
+
+    public void deleteProduct(String id) {
+        Optional<Product> optionalProduct = productRepository.findById(id);
+        if (optionalProduct.isEmpty()) {
+            throw new ResourceNotFoundException("Product", id);
+        }
+        productRepository.delete(optionalProduct.get());
     }
 }
