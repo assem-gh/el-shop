@@ -3,6 +3,7 @@ package com.elshop.backend.product.model;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 
@@ -11,9 +12,10 @@ public record Product(
         @Id String id,
         String slug,
         String title,
-        Double price,
+        BigDecimal price,
         List<String> images,
         String category
+
 
 ) {
 }
