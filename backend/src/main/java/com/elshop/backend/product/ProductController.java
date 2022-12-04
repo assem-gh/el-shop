@@ -43,7 +43,7 @@ public class ProductController {
     public ResponseEntity<Product> createNewProduct(@RequestParam(value = "images") MultipartFile[] imageFiles,
                                                     @RequestPart("data") @Valid ProductRequest newProductData) {
 
-        String id = appUtils.generateUuid();
+        String id = keyGenerateService.generateUuid();
         List<String> imagesUrl = s3Service.uploadMultipleFiles(imageFiles, "products", id);
         Product product = productService.createNewProduct(newProductData, id, imagesUrl);
 
