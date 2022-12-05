@@ -2,6 +2,7 @@ package com.elshop.backend.exception;
 
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -40,13 +41,20 @@ public class AppControllerAdvisor {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleException(MissingServletRequestPartException ex) {
         return new ErrorResponse(HttpStatus.BAD_REQUEST.getReasonPhrase(),
-                "Invalid syntax for this request was provided", new ErrorMessage(ex.getMessage()));
+                UploadFileMessage.NO_IMAGES_PROVIDED.getMessage(), new ErrorMessage(ex.getMessage()));
+    }
+
+    @ExceptionHandler(UploadFileException.class)
+    public ResponseEntity<ErrorResponse> handleException(UploadFileException ex) {
+        return new ResponseEntity<>(new ErrorResponse(ex.getErrorType(),
+                ex.getErrorMessage(), new ErrorMessage(ex.getErrorDetails())), ex.getErrorCode());
     }
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleException() {
-        return new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
+        return new ErrorResponse(
+                HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
                 "Unexpected internal server error", null);
     }
 
