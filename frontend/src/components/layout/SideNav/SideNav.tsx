@@ -1,31 +1,30 @@
-import React, { useState } from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import useStyles from "./sideNav.style";
-import { Group, Navbar, Stack, Text, UnstyledButton } from "@mantine/core";
+import { Group, Navbar, Stack, Text } from "@mantine/core";
 import { SiShopify } from "react-icons/si";
 import NavLinksGroup from "../../NavLinksGroup/NavLinksGroup";
-import { SlArrowLeft, SlArrowRight } from "react-icons/sl";
 import { navLinks } from "../../../data/navLinks";
 
-const SideNav = () => {
-  const [collapsed, setCollapsed] = useState(false);
-  const [activeGroup, setActiveGroup] = useState("products");
+interface SideNavProps {
+  opened: boolean;
+  setOpened: Dispatch<SetStateAction<boolean>>;
+}
 
+const SideNav = ({ opened, setOpened }: SideNavProps) => {
   const navGroups = navLinks.map((link) => (
     <NavLinksGroup
       key={link.name}
-      setActiveGroup={setActiveGroup}
-      isActive={activeGroup === link.name}
-      collapsed={collapsed}
-      setCollapsed={setCollapsed}
+      collapsed={!opened}
+      setOpened={setOpened}
       {...link}
     />
   ));
 
-  const { classes, theme } = useStyles({ collapsed });
+  const { classes, theme } = useStyles({ collapsed: !opened });
 
   return (
     <Navbar
-      width={{ base: collapsed ? 72 : 220 }}
+      width={{ base: !opened ? 72 : 220 }}
       sx={{ transition: "width 0.2s linear" }}
     >
       <Navbar.Section>
@@ -39,18 +38,6 @@ const SideNav = () => {
 
       <Navbar.Section grow py="md">
         <Stack spacing={0}>{navGroups}</Stack>
-      </Navbar.Section>
-
-      <Navbar.Section>
-        <UnstyledButton
-          className={classes.footer}
-          onClick={() => setCollapsed((prev) => !prev)}
-        >
-          <Group position="left" px="xl">
-            {collapsed ? <SlArrowRight /> : <SlArrowLeft />}
-            <span className={classes.collapse}>collapse</span>
-          </Group>
-        </UnstyledButton>
       </Navbar.Section>
     </Navbar>
   );
