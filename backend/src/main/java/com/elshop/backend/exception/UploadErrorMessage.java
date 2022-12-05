@@ -1,6 +1,6 @@
 package com.elshop.backend.exception;
 
-public enum UploadFileMessage {
+public enum UploadErrorMessage {
 
     NO_IMAGES_PROVIDED("No images were provided in the request."),
     INVALID_IMAGE_TYPE("The provided files are not valid images."),
@@ -10,7 +10,7 @@ public enum UploadFileMessage {
 
     private final String message;
 
-    UploadFileMessage(String message) {
+    UploadErrorMessage(String message) {
         this.message = message;
     }
 

@@ -6,8 +6,8 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.transfer.TransferManager;
 import com.amazonaws.services.s3.transfer.TransferManagerBuilder;
 import com.amazonaws.services.s3.transfer.Upload;
+import com.elshop.backend.exception.UploadErrorMessage;
 import com.elshop.backend.exception.UploadFileException;
-import com.elshop.backend.exception.UploadFileMessage;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -45,7 +45,7 @@ public class S3Service {
 
         if (!file.getContentType().startsWith("image/")) {
             throw new UploadFileException(HttpStatus.UNSUPPORTED_MEDIA_TYPE,
-                    UploadFileMessage.INVALID_IMAGE_TYPE, null);
+                    UploadErrorMessage.INVALID_IMAGE_TYPE, null);
         }
         Path bucketKey;
         try (InputStream inputStream = file.getInputStream()) {
@@ -64,10 +64,10 @@ public class S3Service {
                     file.getOriginalFilename(),
                     e.getMessage() != null ? e.getMessage() : "Unknown error"
             );
-            throw new UploadFileException(HttpStatus.SERVICE_UNAVAILABLE, UploadFileMessage.FILE_READ_ERROR, errorMessage);
+            throw new UploadFileException(HttpStatus.SERVICE_UNAVAILABLE, UploadErrorMessage.FILE_READ_ERROR, errorMessage);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new UploadFileException(HttpStatus.SERVICE_UNAVAILABLE, UploadFileMessage.UPLOAD_ERROR, e.getMessage());
+            throw new UploadFileException(HttpStatus.SERVICE_UNAVAILABLE, UploadErrorMessage.UPLOAD_ERROR, e.getMessage());
 
         } catch (Exception e) {
             String errorMessage = String.format(
@@ -77,7 +77,7 @@ public class S3Service {
                     file.getContentType(),
                     e.getMessage() != null ? e.getMessage() : "Unknown error"
             );
-            throw new UploadFileException(HttpStatus.SERVICE_UNAVAILABLE, UploadFileMessage.UPLOAD_ERROR, errorMessage);
+            throw new UploadFileException(HttpStatus.SERVICE_UNAVAILABLE, UploadErrorMessage.UPLOAD_ERROR, errorMessage);
         }
     }
 
