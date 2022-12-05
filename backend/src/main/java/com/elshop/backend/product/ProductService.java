@@ -23,19 +23,17 @@ public class ProductService {
 
     public Product getById(String id) {
         Optional<Product> productToFind = productRepository.findById(id);
-
-        if (productToFind.isEmpty()) {
-            throw new ResourceNotFoundException("Product", id);
-        }
-        return productToFind.get();
+        return productToFind
+                .orElseThrow(() -> new ResourceNotFoundException("Product", id));
     }
+
 
     public Product createNewProduct(ProductRequest newProductData, String id, List<String> images) {
         String slug = keyGenerateService.generateSlug(newProductData.title());
 
         return productRepository.save(new Product(id, slug,
                 newProductData.title(), newProductData.price(),
-                images, newProductData.category()));
+                images, newProductData.category(), newProductData.brand(), newProductData.description()));
     }
 
     public ProductsListResponse getAll(int page, int size) {
@@ -52,10 +50,8 @@ public class ProductService {
 
 
     public void deleteProduct(String id) {
-        Optional<Product> optionalProduct = productRepository.findById(id);
-        if (optionalProduct.isEmpty()) {
-            throw new ResourceNotFoundException("Product", id);
-        }
-        productRepository.delete(optionalProduct.get());
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Product", id));
+        productRepository.delete(product);
     }
 }

@@ -52,11 +52,10 @@ public class AppControllerAdvisor {
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorResponse handleException() {
+    public ErrorResponse handleException(Exception e) {
         return new ErrorResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
-                "Unexpected internal server error", null);
+                "Unexpected internal server error", e.getMessage());
     }
-
 
 }

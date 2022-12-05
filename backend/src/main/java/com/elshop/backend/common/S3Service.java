@@ -20,7 +20,6 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Component
 public class S3Service {
@@ -36,7 +35,7 @@ public class S3Service {
     public List<String> uploadMultipleFiles(MultipartFile[] images, String type, String entityId) {
         return Arrays.stream(images)
                 .map(image -> uploadFile(image, type, entityId))
-                .collect(Collectors.toList());
+                .toList();
 
     }
 
