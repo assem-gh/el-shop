@@ -1,5 +1,5 @@
 export const columns = {
-  products: ["Products", "Title", "Price", "Category"],
+  products: ["Product", "Title", "Price", "Category"],
   orders: [],
   users: [],
 };
