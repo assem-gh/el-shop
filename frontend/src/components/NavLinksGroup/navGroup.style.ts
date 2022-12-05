@@ -11,7 +11,7 @@ const useStyles = createStyles(
     itemControl: {
       width: "100%",
       height: "48px",
-      fontWeight: params.isActive ? 900 : 400,
+      fontWeight: params.isActive ? "bolder" : "normal",
       position: "relative",
       gap: 16,
       backgroundColor: getThemeColor(theme, 7),
@@ -42,9 +42,10 @@ const useStyles = createStyles(
       rotate: params.isActive ? "0deg" : "-90deg",
     },
     navItem: {
-      height: "24px",
+      height: params.collapsed ? "48px" : "36px",
+      color: params.isActive ? theme.colors[theme.primaryColor][6] : "inherit",
+      fontWeight: params.isActive ? 600 : "inherit",
       gap: 4,
-
       paddingLeft: params.collapsed ? 0 : "25%",
       "&:hover": {
         backgroundColor: theme.fn.rgba(
@@ -55,5 +56,4 @@ const useStyles = createStyles(
     },
   })
 );
-
 export default useStyles;
