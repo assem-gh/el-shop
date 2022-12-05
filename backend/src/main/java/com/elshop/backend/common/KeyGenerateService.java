@@ -1,6 +1,6 @@
 package com.elshop.backend.common;
 
-import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;
@@ -9,7 +9,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @Component
-@Slf4j
+
 public class KeyGenerateService {
     public String generateSlug(String title) {
         String random = generateUniqueString(8);

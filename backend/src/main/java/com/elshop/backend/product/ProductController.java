@@ -1,7 +1,7 @@
 package com.elshop.backend.product;
 
 
-import com.elshop.backend.common.AppUtils;
+import com.elshop.backend.common.KeyGenerateService;
 import com.elshop.backend.common.S3Service;
 import com.elshop.backend.product.model.Product;
 import com.elshop.backend.product.model.request.ProductRequest;
@@ -24,7 +24,7 @@ public class ProductController {
 
     private final ProductService productService;
     private final S3Service s3Service;
-    private final AppUtils appUtils;
+    private final KeyGenerateService keyGenerateService;
 
     @GetMapping
     public ResponseEntity<ProductsListResponse> getAllProducts(@RequestParam(defaultValue = "0") int page,
@@ -39,7 +39,7 @@ public class ProductController {
     }
 
 
-    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Product> createNewProduct(@RequestParam(value = "images") MultipartFile[] imageFiles,
                                                     @RequestPart("data") @Valid ProductRequest newProductData) {
 
