@@ -41,7 +41,7 @@ public class AppControllerAdvisor {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleException(MissingServletRequestPartException ex) {
         return new ErrorResponse(HttpStatus.BAD_REQUEST.getReasonPhrase(),
-                UploadFileMessage.NO_IMAGES_PROVIDED.getMessage(), new ErrorMessage(ex.getMessage()));
+                UploadErrorMessage.NO_IMAGES_PROVIDED.getMessage(), new ErrorMessage(ex.getMessage()));
     }
 
     @ExceptionHandler(UploadFileException.class)

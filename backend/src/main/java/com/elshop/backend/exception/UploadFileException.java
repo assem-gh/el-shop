@@ -12,7 +12,7 @@ public class UploadFileException extends RuntimeException {
     private final HttpStatus errorCode;
     private final String errorDetails;
 
-    public UploadFileException(HttpStatus errorCode, UploadFileMessage message, String details) {
+    public UploadFileException(HttpStatus errorCode, UploadErrorMessage message, String details) {
         this.errorType = errorCode.getReasonPhrase();
         this.errorCode = errorCode;
         this.errorMessage = message.getMessage();
