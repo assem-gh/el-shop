@@ -1,19 +1,18 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useMemo, useState } from "react";
 import { Collapse, Stack, Text, Tooltip, UnstyledButton } from "@mantine/core";
 import { IconType } from "react-icons";
 import useStyles from "./navGroup.style";
-import { BsDashSquare } from "react-icons/bs";
-import { Link as RouterLink } from "react-router-dom";
 import { TbChevronDown } from "react-icons/tb";
 import NavLinkItem from "./NavLinkItem";
-import { Link } from "../../data/navLinks";
+
+import { useLocation, useNavigate } from "react-router-dom";
 
 interface NavLinksControlProps {
   setOpened: Dispatch<SetStateAction<boolean>>;
   name: string;
   collapsed: boolean;
   icon: IconType;
-  links: Link[];
+  links: any[];
   path: string;
 }
 
@@ -23,7 +22,6 @@ const NavLinksGroup = ({
   links,
   path,
   collapsed,
-  setCollapsed,
 }: NavLinksControlProps) => {
   const [showLinks, setShowLinks] = useState(false);
 
