@@ -1,8 +1,8 @@
 package com.elshop.backend.product;
 
 
-import com.elshop.backend.common.AppUtils;
 import com.elshop.backend.common.FakerUtils;
+import com.elshop.backend.common.KeyGenerateService;
 import com.elshop.backend.exception.ResourceNotFoundException;
 import com.elshop.backend.product.model.Product;
 import com.elshop.backend.product.model.request.ProductRequest;
@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,8 +22,8 @@ import static org.mockito.Mockito.*;
 class ProductUnitTest {
 
     private final ProductRepository mockRepository = mock(ProductRepository.class);
-    private final AppUtils utils = new AppUtils();
-    private final AppUtils mockUtils = mock(AppUtils.class);
+    private final KeyGenerateService utils = new KeyGenerateService();
+    private final KeyGenerateService mockUtils = mock(KeyGenerateService.class);
     private final ProductService productService = new ProductService(mockUtils, mockRepository);
 
 
@@ -63,7 +64,10 @@ class ProductUnitTest {
     void addNewProduct() {
         List<String> images = List.of("http/url1.abc", "http/url2.abc", "http/url3.abc");
 
-        ProductRequest newProductData = new ProductRequest("New 7aX 64GB", 99.99, "Mobile");
+        ProductRequest newProductData = new ProductRequest(
+                "New 7aX 64GB",
+                new BigDecimal("99.99"),
+                "Mobile");
         Product productToTest = new Product(
                 "7146680b-0127-4d9a-a4fe-853e591e28ca",
                 "new-7aX-64gb-3bU3RSXW",

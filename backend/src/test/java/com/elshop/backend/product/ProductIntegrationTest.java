@@ -15,6 +15,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +37,7 @@ class ProductIntegrationTest {
     void addNewValidProduct() throws Exception {
         ProductRequest requestProduct = new ProductRequest(
                 "New 7aX 64GB",
-                199.99,
+                new BigDecimal("199.99"),
                 "Mobile"
         );
 
@@ -70,7 +71,7 @@ class ProductIntegrationTest {
 
         ProductRequest requestProduct = new ProductRequest(
                 "New 7aX 64GB",
-                199.99,
+                new BigDecimal("199.99"),
                 "Mobile"
         );
         String requestProductJson = objectMapper.writeValueAsString(requestProduct);
@@ -193,8 +194,7 @@ class ProductIntegrationTest {
 
         ProductRequest requestProduct = new ProductRequest(
                 "New 7aX 64GB",
-                199.99,
-
+                new BigDecimal("199.99"),
                 "Mobile"
         );
 
