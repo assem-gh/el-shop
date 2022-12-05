@@ -2,6 +2,7 @@ package com.elshop.backend.product;
 
 
 import com.elshop.backend.exception.ErrorResponse;
+import com.elshop.backend.exception.UploadErrorMessage;
 import com.elshop.backend.product.model.Product;
 import com.elshop.backend.product.model.request.ProductRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -76,6 +77,35 @@ class ProductIntegrationTest {
         );
         String requestProductJson = objectMapper.writeValueAsString(requestProduct);
 
+        MockMultipartFile file1 = new MockMultipartFile("images", "file1.jpg", "text/plain", "nice file".getBytes());
+        MockMultipartFile file2 = new MockMultipartFile("images", "file2.jpg", "text/plain", "another one".getBytes());
+        MockMultipartFile data = new MockMultipartFile("data", "", "application/json", requestProductJson.getBytes());
+
+        String response = mvc.perform(MockMvcRequestBuilders.multipart("/api/products")
+                        .file(file1)
+                        .file(file2)
+                        .file(data))
+                .andExpect(status().isUnsupportedMediaType())
+                .andReturn().getResponse().getContentAsString();
+
+        ErrorResponse errorResponse = objectMapper.readValue(response, ErrorResponse.class);
+
+        assertEquals(UploadErrorMessage.INVALID_IMAGE_TYPE.getMessage(), errorResponse.message());
+        assertEquals(HttpStatus.UNSUPPORTED_MEDIA_TYPE.getReasonPhrase(), errorResponse.type());
+
+    }
+
+    @Test
+    @DirtiesContext
+    void addProductWithNonImageFiles() throws Exception {
+
+        ProductRequest requestProduct = new ProductRequest(
+                "New 7aX 64GB",
+                new BigDecimal("199.99"),
+                "Mobile"
+        );
+        String requestProductJson = objectMapper.writeValueAsString(requestProduct);
+
         MockMultipartFile data = new MockMultipartFile("data", "", "application/json", requestProductJson.getBytes());
 
 
@@ -83,6 +113,7 @@ class ProductIntegrationTest {
                 .file(data)).andExpect(status().isBadRequest());
     }
 
+  
     @Test
     @DirtiesContext
     void addNotValidProductData() throws Exception {
