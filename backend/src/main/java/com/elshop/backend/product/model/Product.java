@@ -1,8 +1,11 @@
 package com.elshop.backend.product.model;
 
+import com.elshop.backend.category.model.Category;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -11,11 +14,13 @@ import java.util.List;
 public record Product(
         @Id String id,
         String slug,
+        @NotNull
         String title,
         BigDecimal price,
         List<String> images,
-        String category
-
-
+        @DBRef
+        Category category,
+        Brand brand,
+        String description
 ) {
 }
