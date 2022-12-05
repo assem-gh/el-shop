@@ -3,7 +3,7 @@ import { getThemeColor } from "../../utils";
 
 const useStyles = createStyles((theme) => ({
   tableHeader: {
-    backgroundColor: getThemeColor(theme, 7, 2),
+    backgroundColor: getThemeColor(theme, 8, 2),
     height: 48,
   },
 }));
