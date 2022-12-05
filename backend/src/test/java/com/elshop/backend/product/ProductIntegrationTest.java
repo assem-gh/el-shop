@@ -1,6 +1,7 @@
 package com.elshop.backend.product;
 
 
+import com.elshop.backend.common.FakerUtils;
 import com.elshop.backend.exception.ErrorResponse;
 import com.elshop.backend.exception.UploadErrorMessage;
 import com.elshop.backend.product.model.Product;
@@ -16,7 +17,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,15 +33,11 @@ class ProductIntegrationTest {
     @Autowired
     private MockMvc mvc;
 
+
     @Test
     @DirtiesContext
     void addNewValidProduct() throws Exception {
-        ProductRequest requestProduct = new ProductRequest(
-                "New 7aX 64GB",
-                new BigDecimal("199.99"),
-                "Mobile"
-        );
-
+        ProductRequest requestProduct = FakerUtils.generateFakeProductRequest();
         String requestProductJson = objectMapper.writeValueAsString(requestProduct);
 
         MockMultipartFile image1 = new MockMultipartFile("images", "image1.jpg", "image/jpeg", "nice image".getBytes());
@@ -54,27 +50,21 @@ class ProductIntegrationTest {
                         .file(data)).andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-
         Product newProduct = objectMapper.readValue(content, Product.class);
-        System.out.println(newProduct.images());
+
         assertFalse(newProduct.id().isEmpty());
         assertEquals(2, newProduct.images().size());
         assertEquals(newProduct.slug()
                         .substring(0, newProduct.slug().length() - 9)
                         .replace('-', ' '),
                 requestProduct.title().toLowerCase());
-
     }
 
     @Test
     @DirtiesContext
     void addProductWithoutImages() throws Exception {
 
-        ProductRequest requestProduct = new ProductRequest(
-                "New 7aX 64GB",
-                new BigDecimal("199.99"),
-                "Mobile"
-        );
+        ProductRequest requestProduct = FakerUtils.generateFakeProductRequest();
         String requestProductJson = objectMapper.writeValueAsString(requestProduct);
 
         MockMultipartFile file1 = new MockMultipartFile("images", "file1.jpg", "text/plain", "nice file".getBytes());
@@ -99,11 +89,7 @@ class ProductIntegrationTest {
     @DirtiesContext
     void addProductWithNonImageFiles() throws Exception {
 
-        ProductRequest requestProduct = new ProductRequest(
-                "New 7aX 64GB",
-                new BigDecimal("199.99"),
-                "Mobile"
-        );
+        ProductRequest requestProduct = FakerUtils.generateFakeProductRequest();
         String requestProductJson = objectMapper.writeValueAsString(requestProduct);
 
         MockMultipartFile data = new MockMultipartFile("data", "", "application/json", requestProductJson.getBytes());
@@ -113,14 +99,13 @@ class ProductIntegrationTest {
                 .file(data)).andExpect(status().isBadRequest());
     }
 
-  
+
     @Test
     @DirtiesContext
     void addNotValidProductData() throws Exception {
         String requestProductJson = """
                 {
-                "price":33.33,
-                 "category":"Mobile"
+                "price":33.33                           
                 }
                 """;
 
@@ -151,8 +136,7 @@ class ProductIntegrationTest {
                 {
                 "title":"New 7aX 64GB",
                 "price":199.99,
-                "images":[],
-                "category":"Mobile"
+                "images":[]         
                 }
                 """;
 
@@ -223,14 +207,9 @@ class ProductIntegrationTest {
         int page = 0;
         int size = 5;
 
-        ProductRequest requestProduct = new ProductRequest(
-                "New 7aX 64GB",
-                new BigDecimal("199.99"),
-                "Mobile"
-        );
+        ProductRequest requestProduct = FakerUtils.generateFakeProductRequest();
 
         String requestProductJson = objectMapper.writeValueAsString(requestProduct);
-
 
         MockMultipartFile image1 = new MockMultipartFile("images", "image1.jpg", "image/jpeg", "nice image".getBytes());
         MockMultipartFile image2 = new MockMultipartFile("images", "image2.jpg", "image/jpeg", "another one".getBytes());
@@ -243,6 +222,7 @@ class ProductIntegrationTest {
                         .file(data)).andExpect(status().isOk())
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
+
 
         mvc.perform(MockMvcRequestBuilders.get(String.format("/api/products?page=%s&size=%s", page, size)))
                 .andExpect(status().isOk())

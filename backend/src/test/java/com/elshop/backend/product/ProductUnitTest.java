@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -62,27 +61,13 @@ class ProductUnitTest {
 
     @Test
     void addNewProduct() {
-        List<String> images = List.of("http/url1.abc", "http/url2.abc", "http/url3.abc");
-
-        ProductRequest newProductData = new ProductRequest(
-                "New 7aX 64GB",
-                new BigDecimal("99.99"),
-                "Mobile");
-        Product productToTest = new Product(
-                "7146680b-0127-4d9a-a4fe-853e591e28ca",
-                "new-7aX-64gb-3bU3RSXW",
-                newProductData.title(),
-                newProductData.price(),
-                images,
-                newProductData.category()
-        );
+        ProductRequest newProductData = FakerUtils.generateFakeProductRequest();
+        Product productToTest = FakerUtils.generateFakeProduct(newProductData, 5);
 
         when(mockUtils.generateSlug(newProductData.title()))
-                .thenReturn("new-7aX-64gb-3bU3RSXW");
+                .thenReturn(productToTest.slug());
 
-
-        productService.createNewProduct(newProductData, "7146680b-0127-4d9a-a4fe-853e591e28ca", images);
-
+        productService.createNewProduct(newProductData, productToTest.id(), productToTest.images());
         verify(mockRepository).save(productToTest);
 
     }
