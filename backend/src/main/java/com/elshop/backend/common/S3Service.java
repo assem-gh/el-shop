@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -57,6 +58,17 @@ public class S3Service {
             Upload upload = transferManager.upload(request);
             upload.waitForCompletion();
             return s3.getUrl(bucketName, bucketKey.toString()).toString();
+        } catch (IOException e) {
+            String errorMessage = String.format(
+                    "Error reading file '%s':%n%s",
+                    file.getOriginalFilename(),
+                    e.getMessage() != null ? e.getMessage() : "Unknown error"
+            );
+            throw new UploadFileException(HttpStatus.SERVICE_UNAVAILABLE, UploadFileMessage.FILE_READ_ERROR, errorMessage);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new UploadFileException(HttpStatus.SERVICE_UNAVAILABLE, UploadFileMessage.UPLOAD_ERROR, e.getMessage());
+
         } catch (Exception e) {
             String errorMessage = String.format(
                     "Error uploading file '%s' with size %d and content type '%s':%n%s",
