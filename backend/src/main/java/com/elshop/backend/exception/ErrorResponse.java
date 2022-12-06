@@ -12,7 +12,7 @@ public record ErrorResponse(
         String type,
         String message,
 
-        @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+        @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
         @JsonSubTypes({
                 @JsonSubTypes.Type(value = ValidationErrorMessage.class, name = "validationMessages"),
                 @JsonSubTypes.Type(value = ErrorMessage.class, name = "errorMessage")

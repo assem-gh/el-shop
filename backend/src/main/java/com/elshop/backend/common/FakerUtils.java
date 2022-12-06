@@ -47,14 +47,17 @@ public class FakerUtils {
         );
     }
 
-    public static ProductRequest generateFakeProductRequest() {
+    public static ProductRequest generateFakeProductRequest(Category category) {
         String title = faker.commerce().productName();
-        Category category = new Category(faker.internet().uuid(),
-                faker.commerce().department());
         Brand brand = new Brand(faker.internet().uuid(), faker.company().name());
         String description = faker.lorem().paragraph(5);
         BigDecimal price = new BigDecimal(faker.commerce().price(1, 1000));
         return new ProductRequest(title, price, category, brand, description);
+    }
+
+    public static ProductRequest generateFakeProductRequest() {
+        return generateFakeProductRequest(new Category(faker.internet().uuid(),
+                faker.commerce().department()));
     }
 
     public static List<Product> generateFakeProductsList(int numberOfProducts) {
