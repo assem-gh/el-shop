@@ -1,6 +1,7 @@
 package com.elshop.backend.common;
 
 import com.elshop.backend.category.model.Category;
+import com.elshop.backend.category.model.request.CategoryRequest;
 import com.elshop.backend.product.model.Brand;
 import com.elshop.backend.product.model.Product;
 import com.elshop.backend.product.model.request.ProductRequest;
@@ -68,4 +69,21 @@ public class FakerUtils {
                 .mapToObj(item -> faker.internet().image())
                 .toList();
     }
+
+    public static List<Category> generateListOfCategories(int numberOfCategories) {
+        return IntStream.range(0, numberOfCategories)
+                .mapToObj(item -> generateCategory())
+                .distinct()
+                .limit(numberOfCategories)
+                .toList();
+    }
+
+    public static Category generateCategory() {
+        return new Category(faker.internet().uuid(), faker.commerce().department());
+    }
+
+    public static CategoryRequest generateCategoryRequest() {
+        return new CategoryRequest(faker.commerce().department());
+    }
+
 }

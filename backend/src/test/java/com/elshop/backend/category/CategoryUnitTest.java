@@ -5,8 +5,10 @@ import com.elshop.backend.category.model.request.CategoryRequest;
 import com.elshop.backend.common.FakerUtils;
 import com.elshop.backend.common.KeyGenerateService;
 import com.elshop.backend.exception.ResourceAlreadyExistException;
+import com.elshop.backend.exception.ResourceNotFoundException;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -45,5 +47,35 @@ class CategoryUnitTest {
         ResourceAlreadyExistException exception = assertThrows(ResourceAlreadyExistException.class, () -> categoryService.add(requestData));
         String expectedMessage = String.format("A Category with the name: %s already exists. Please choose a different name and try again.", requestData.name());
         assertEquals(expectedMessage, exception.getErrorDetails());
+    }
+
+    @Test
+    void getAllCategoriesSuccess() {
+        List<Category> categorisList = FakerUtils.generateListOfCategories(20);
+        when(mockRepository.findAll())
+                .thenReturn(categorisList);
+
+        List<Category> actualList = categoryService.getAll();
+        assertEquals(20, actualList.size());
+        assertEquals(categorisList, actualList);
+    }
+
+    @Test
+    void getCategoryByIdSuccess() {
+        Category existCategory = FakerUtils.generateCategory();
+        when(mockRepository.findById(existCategory.id()))
+                .thenReturn(Optional.of(existCategory));
+        Category actualCategory = categoryService.getById(existCategory.id());
+        assertEquals(existCategory, actualCategory);
+    }
+
+    @Test
+    void getCategoryByIdFail() {
+        String randomId = FakerUtils.faker.internet().uuid();
+        when(mockRepository.findById(randomId))
+                .thenReturn(Optional.empty());
+        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> categoryService.getById(randomId));
+        String expectMessage = String.format("Category with id: %s, Does not exist!", randomId);
+        assertEquals(expectMessage, exception.getErrorDetails());
     }
 }

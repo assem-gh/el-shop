@@ -7,6 +7,7 @@ import com.elshop.backend.common.FakerUtils;
 import com.elshop.backend.exception.ErrorMessage;
 import com.elshop.backend.exception.ErrorResponse;
 import com.elshop.backend.exception.ResourceAlreadyExistException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -15,8 +16,11 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.IntStream;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 
 @SpringBootTest
@@ -34,8 +38,9 @@ class CategoryIntegrationTest {
         Category category = mvcTestUtils.performMvcResourceOperation(
                 requstData,
                 HttpMethod.POST, categoriesEndpoint
-                , HttpStatus.OK,
-                Category.class);
+                , HttpStatus.OK, new TypeReference<Category>() {
+                }
+        );
         assertFalse(category.id().isEmpty());
         assertEquals(requstData.name(), category.name());
     }
@@ -47,11 +52,13 @@ class CategoryIntegrationTest {
 
         // create category
         mvcTestUtils.performMvcResourceOperation(
-                requstData, HttpMethod.POST, categoriesEndpoint, HttpStatus.OK, Category.class);
+                requstData, HttpMethod.POST, categoriesEndpoint, HttpStatus.OK, new TypeReference<Category>() {
+                });
 
         // create category with the same name to test
         ErrorResponse response = mvcTestUtils
-                .performMvcResourceOperation(requstData, HttpMethod.POST, categoriesEndpoint, HttpStatus.CONFLICT, ErrorResponse.class);
+                .performMvcResourceOperation(requstData, HttpMethod.POST, categoriesEndpoint, HttpStatus.CONFLICT, new TypeReference<ErrorResponse>() {
+                });
         String expectedErrorMessage = String.format(
                 "A Category with the name: %s already exists. Please choose a different name and try again.",
                 requstData.name());
@@ -59,6 +66,40 @@ class CategoryIntegrationTest {
         assertEquals(ResourceAlreadyExistException.MESSAGE, response.message());
         assertEquals(ResourceAlreadyExistException.TYPE, response.type());
         assertEquals(expectedErrorMessage, errorMessage.error());
+    }
+
+    @Test
+    @DirtiesContext
+    void getAllCategoriesSuccess() throws Exception {
+        List<Category> listAtBeginning = mvcTestUtils.performMvcResourceOperation(
+                HttpMethod.GET, categoriesEndpoint, HttpStatus.OK, new TypeReference<List<Category>>() {
+                });
+
+        List<Category> expectedList = new ArrayList<Category>();
+        assertTrue(listAtBeginning.isEmpty());
+
+        List<CategoryRequest> requests = IntStream.range(0, 20)
+                .mapToObj(category -> {
+                    return FakerUtils.generateCategoryRequest();
+                })
+                .distinct()
+                .toList();
+
+        requests.forEach(request -> {
+            try {
+                Category response = mvcTestUtils.performMvcResourceOperation(
+                        request, HttpMethod.POST, categoriesEndpoint, HttpStatus.OK, new TypeReference<Category>() {
+                        });
+                expectedList.add(response);
+            } catch (Exception e) {
+//
+            }
+        });
+
+        List<Category> listAfter = mvcTestUtils.performMvcResourceOperation(
+                HttpMethod.GET, categoriesEndpoint, HttpStatus.OK, new TypeReference<List<Category>>() {
+                });
+        assertEquals(expectedList, listAfter);
     }
 
 }
