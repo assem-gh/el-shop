@@ -1,5 +1,6 @@
 package com.elshop.backend;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ public class MvcTestUtils {
 
     public <T, R> T performMvcResourceOperation(R requestData, HttpMethod method,
                                                 String uri, HttpStatus expectedStatus,
-                                                Class<T> responseType)
+                                                TypeReference<T> responseType)
             throws Exception {
         MockHttpServletRequestBuilder builder = MockMvcRequestBuilders.request(method, uri);
 
@@ -34,8 +35,12 @@ public class MvcTestUtils {
         String res = mvc.perform(builder)
                 .andExpect(status().is(expectedStatus.value()))
                 .andReturn().getResponse().getContentAsString();
-
         return objectMapper.readValue(res, responseType);
     }
 
+    public <T> T performMvcResourceOperation(HttpMethod method,
+                                             String uri, HttpStatus expectedStatus,
+                                             TypeReference<T> responseType) throws Exception {
+        return performMvcResourceOperation(null, method, uri, expectedStatus, responseType);
+    }
 }
