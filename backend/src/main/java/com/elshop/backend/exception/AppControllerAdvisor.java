@@ -32,8 +32,18 @@ public class AppControllerAdvisor {
     @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleException(ResourceNotFoundException ex) {
+
         return new ErrorResponse(ResourceNotFoundException.TYPE,
                 ResourceNotFoundException.MESSAGE,
+                new ErrorMessage(ex.getErrorDetails()));
+    }
+
+    @ExceptionHandler(ResourceAlreadyExistException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponse handleException(ResourceAlreadyExistException ex) {
+
+        return new ErrorResponse(ResourceAlreadyExistException.TYPE,
+                ResourceAlreadyExistException.MESSAGE,
                 new ErrorMessage(ex.getErrorDetails()));
     }
 

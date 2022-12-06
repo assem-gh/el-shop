@@ -22,6 +22,5 @@ public class CategoryController {
         return categoryService.add(requestData);
     }
 
-    ;
 
 }
