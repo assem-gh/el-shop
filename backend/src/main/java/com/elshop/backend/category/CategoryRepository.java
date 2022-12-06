@@ -8,4 +8,6 @@ import java.util.Optional;
 public interface CategoryRepository extends MongoRepository<Category, String> {
 
   Optional<Category> findCategoryByName(String name);
+
+  boolean existsByName(String name);
 }
