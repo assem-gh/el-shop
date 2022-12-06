@@ -39,8 +39,7 @@ class ProductIntegrationTest {
     @Autowired
     private MockMvc mvc;
 
-    @Autowired
-    MvcTestUtils mvcTestUtils;
+    private MvcTestUtils mvcTestUtils;
 
     @Test
     @DirtiesContext
