@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 public class FakerUtils {
-    private static final Faker faker = new Faker();
+    public static final Faker faker = new Faker();
     private static final KeyGenerateService keyGenerateService = new KeyGenerateService();
 
     private FakerUtils() {
@@ -63,7 +63,7 @@ public class FakerUtils {
                 .toList();
     }
 
-    private static List<String> generateImagesList(int numberOfImages) {
+    public static List<String> generateImagesList(int numberOfImages) {
         return IntStream.range(0, numberOfImages)
                 .mapToObj(item -> faker.internet().image())
                 .toList();
