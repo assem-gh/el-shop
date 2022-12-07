@@ -40,4 +40,8 @@ public class MvcTestUtils {
                                              TypeReference<T> responseType) throws Exception {
         return performMvcResourceOperation(null, method, uri, expectedStatus, responseType);
     }
+
+    public ObjectMapper mapper() {
+        return this.objectMapper;
+    }
 }

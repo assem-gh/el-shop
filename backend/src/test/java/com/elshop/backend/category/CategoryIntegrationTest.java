@@ -28,9 +28,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @AutoConfigureMockMvc
 class CategoryIntegrationTest {
     private final String categoriesEndpoint = "/api/categories/";
-
     private final MvcTestUtils mvcTestUtils;
-
 
     @Autowired
     public CategoryIntegrationTest(MockMvc mockMvc) {
@@ -73,7 +71,10 @@ class CategoryIntegrationTest {
         String expectedErrorMessage = String.format(
                 "A Category with the name: %s already exists. Please choose a different name and try again.",
                 requstData.name());
-        ErrorMessage errorMessage = (ErrorMessage) response.data();
+        ErrorMessage errorMessage = mvcTestUtils
+                .mapper()
+                .convertValue(response.data(), ErrorMessage.class);
+
         assertEquals(ResourceAlreadyExistException.MESSAGE, response.message());
         assertEquals(ResourceAlreadyExistException.TYPE, response.type());
         assertEquals(expectedErrorMessage, errorMessage.error());
