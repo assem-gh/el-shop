@@ -36,10 +36,18 @@ class ProductIntegrationTest {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final String productsEndpoint = "/api/products";
     private final String categoriesEndpoint = "/api/categories";
-    @Autowired
-    private MockMvc mvc;
 
-    private MvcTestUtils mvcTestUtils;
+
+    private final MockMvc mockMvc;
+
+
+    private final MvcTestUtils mvcTestUtils;
+
+    @Autowired
+    public ProductIntegrationTest(MockMvc mockMvc) {
+        this.mockMvc = mockMvc;
+        this.mvcTestUtils = new MvcTestUtils(mockMvc);
+    }
 
     @Test
     @DirtiesContext
@@ -51,7 +59,7 @@ class ProductIntegrationTest {
         MockMultipartFile image2 = new MockMultipartFile("images", "image2.jpg", "image/jpeg", "another one".getBytes());
         MockMultipartFile data = new MockMultipartFile("data", "", "application/json", requestProductJson.getBytes());
 
-        String content = mvc.perform(MockMvcRequestBuilders.multipart(productsEndpoint)
+        String content = mockMvc.perform(MockMvcRequestBuilders.multipart(productsEndpoint)
                         .file(image1)
                         .file(image2)
                         .file(data)).andExpect(status().isOk())
@@ -78,7 +86,7 @@ class ProductIntegrationTest {
         MockMultipartFile file2 = new MockMultipartFile("images", "file2.jpg", "text/plain", "another one".getBytes());
         MockMultipartFile data = new MockMultipartFile("data", "", "application/json", requestProductJson.getBytes());
 
-        String response = mvc.perform(MockMvcRequestBuilders.multipart(productsEndpoint)
+        String response = mockMvc.perform(MockMvcRequestBuilders.multipart(productsEndpoint)
                         .file(file1)
                         .file(file2)
                         .file(data))
@@ -102,7 +110,7 @@ class ProductIntegrationTest {
         MockMultipartFile data = new MockMultipartFile("data", "", "application/json", requestProductJson.getBytes());
 
 
-        mvc.perform(MockMvcRequestBuilders.multipart(productsEndpoint)
+        mockMvc.perform(MockMvcRequestBuilders.multipart(productsEndpoint)
                 .file(data)).andExpect(status().isBadRequest());
     }
 
@@ -120,7 +128,7 @@ class ProductIntegrationTest {
         MockMultipartFile image2 = new MockMultipartFile("images", "image2.jpg", "image/jpeg", "another one".getBytes());
         MockMultipartFile data = new MockMultipartFile("data", "", "application/json", requestProductJson.getBytes());
 
-        String content = mvc.perform(MockMvcRequestBuilders.multipart(productsEndpoint)
+        String content = mockMvc.perform(MockMvcRequestBuilders.multipart(productsEndpoint)
                         .file(image1)
                         .file(image2)
                         .file(data)).andExpect(status().isBadRequest())
@@ -152,7 +160,7 @@ class ProductIntegrationTest {
         MockMultipartFile data = new MockMultipartFile("data", "", "application/json", requestProductJson.getBytes());
 
 
-        String postResponse = mvc.perform(MockMvcRequestBuilders.multipart(productsEndpoint)
+        String postResponse = mockMvc.perform(MockMvcRequestBuilders.multipart(productsEndpoint)
                         .file(image1)
                         .file(image2)
                         .file(data)).andExpect(status().isOk())
@@ -160,7 +168,7 @@ class ProductIntegrationTest {
 
         Product createdProduct = objectMapper.readValue(postResponse, Product.class);
 
-        String getResponse = mvc.perform(MockMvcRequestBuilders.get(productsEndpoint + "/" + createdProduct.id()))
+        String getResponse = mockMvc.perform(MockMvcRequestBuilders.get(productsEndpoint + "/" + createdProduct.id()))
                 .andExpect(status().isOk())
                 .andExpect(content().json(postResponse))
                 .andReturn().getResponse().getContentAsString();
@@ -173,7 +181,7 @@ class ProductIntegrationTest {
     void getNonExistProductWithId() throws Exception {
         String idToTest = "few65j453otlg";
 
-        mvc.perform(MockMvcRequestBuilders.get(productsEndpoint + "/" + idToTest))
+        mockMvc.perform(MockMvcRequestBuilders.get(productsEndpoint + "/" + idToTest))
                 .andExpect(status().isNotFound())
                 .andExpect(content().json("""
                         {
@@ -193,7 +201,7 @@ class ProductIntegrationTest {
         int size = 5;
 
 
-        mvc.perform(MockMvcRequestBuilders.get(String.format(productsEndpoint + "?page=%s&size=%s", page, size)))
+        mockMvc.perform(MockMvcRequestBuilders.get(String.format(productsEndpoint + "?page=%s&size=%s", page, size)))
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
                         {
@@ -227,7 +235,7 @@ class ProductIntegrationTest {
         MockMultipartFile data = new MockMultipartFile("data", "", "application/json", requestProductJson.getBytes());
 
 
-        String createdProduct = mvc.perform(MockMvcRequestBuilders.multipart(productsEndpoint)
+        String createdProduct = mockMvc.perform(MockMvcRequestBuilders.multipart(productsEndpoint)
                         .file(image1)
                         .file(image2)
                         .file(data)).andExpect(status().isOk())
@@ -235,7 +243,7 @@ class ProductIntegrationTest {
                 .andReturn().getResponse().getContentAsString();
 
 
-        mvc.perform(MockMvcRequestBuilders.get(String.format("%s?page=%s&size=%s", productsEndpoint, page, size)))
+        mockMvc.perform(MockMvcRequestBuilders.get(String.format("%s?page=%s&size=%s", productsEndpoint, page, size)))
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
                         {
