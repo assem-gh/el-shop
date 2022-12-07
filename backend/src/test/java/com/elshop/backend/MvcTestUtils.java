@@ -3,25 +3,20 @@ package com.elshop.backend;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Component;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Component
 @RequiredArgsConstructor
-@AutoConfigureMockMvc
 public class MvcTestUtils {
     private final ObjectMapper objectMapper = new ObjectMapper();
-    @Autowired
-    private MockMvc mvc;
+
+    private final MockMvc mvc;
 
 
     public <T, R> T performMvcResourceOperation(R requestData, HttpMethod method,

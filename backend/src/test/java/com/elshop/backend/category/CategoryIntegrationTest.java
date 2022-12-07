@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,22 +28,27 @@ import static org.junit.jupiter.api.Assertions.*;
 @AutoConfigureMockMvc
 class CategoryIntegrationTest {
     private final String categoriesEndpoint = "/api/categories/";
-    @Autowired
-    MvcTestUtils mvcTestUtils;
 
+    private final MvcTestUtils mvcTestUtils;
+
+
+    @Autowired
+    public CategoryIntegrationTest(MockMvc mockMvc) {
+        this.mvcTestUtils = new MvcTestUtils(mockMvc);
+    }
 
     @Test
     @DirtiesContext
     void addNewCategorySuccess() throws Exception {
-        CategoryRequest requstData = new CategoryRequest(FakerUtils.faker.commerce().department());
+        CategoryRequest requestData = new CategoryRequest(FakerUtils.faker.commerce().department());
         Category category = mvcTestUtils.performMvcResourceOperation(
-                requstData,
+                requestData,
                 HttpMethod.POST, categoriesEndpoint
                 , HttpStatus.OK, new TypeReference<Category>() {
                 }
         );
         assertFalse(category.id().isEmpty());
-        assertEquals(requstData.name(), category.name());
+        assertEquals(requestData.name(), category.name());
     }
 
     @Test
@@ -57,8 +63,13 @@ class CategoryIntegrationTest {
 
         // create category with the same name to test
         ErrorResponse response = mvcTestUtils
-                .performMvcResourceOperation(requstData, HttpMethod.POST, categoriesEndpoint, HttpStatus.CONFLICT, new TypeReference<ErrorResponse>() {
-                });
+                .performMvcResourceOperation(requstData,
+                        HttpMethod.POST,
+                        categoriesEndpoint,
+                        HttpStatus.CONFLICT,
+                        new TypeReference<ErrorResponse>() {
+                        });
+
         String expectedErrorMessage = String.format(
                 "A Category with the name: %s already exists. Please choose a different name and try again.",
                 requstData.name());
@@ -79,9 +90,7 @@ class CategoryIntegrationTest {
         assertTrue(listAtBeginning.isEmpty());
 
         List<CategoryRequest> requests = IntStream.range(0, 20)
-                .mapToObj(category -> {
-                    return FakerUtils.generateCategoryRequest();
-                })
+                .mapToObj(category -> FakerUtils.generateCategoryRequest())
                 .distinct()
                 .toList();
 
