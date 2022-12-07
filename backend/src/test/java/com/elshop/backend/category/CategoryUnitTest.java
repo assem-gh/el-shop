@@ -78,4 +78,62 @@ class CategoryUnitTest {
         String expectMessage = String.format("Category with id: %s, Does not exist!", randomId);
         assertEquals(expectMessage, exception.getErrorDetails());
     }
+
+
+    @Test
+    void updateCategorySuccess() {
+        CategoryRequest requestData = FakerUtils.generateCategoryRequest();
+        String id = FakerUtils.faker.internet().uuid();
+        when(mockRepository.existsByName(requestData.name())).thenReturn(false);
+        when(mockRepository.existsById(id)).thenReturn(true);
+
+        categoryService.updateCategory(id, requestData);
+        verify(mockRepository).save(new Category(id, requestData.name()));
+    }
+
+    @Test
+    void updateNotExistCategoryFail() {
+        CategoryRequest requestData = FakerUtils.generateCategoryRequest();
+        String id = FakerUtils.faker.internet().uuid();
+        when(mockRepository.existsByName(requestData.name())).thenReturn(false);
+        when(mockRepository.existsById(id)).thenReturn(false);
+        ResourceNotFoundException exception = assertThrows(
+                ResourceNotFoundException.class,
+                () -> categoryService.updateCategory(id, requestData));
+        String expectedMessage = String.format("Category with id: %s, Does not exist!", id);
+        assertEquals(expectedMessage, exception.getErrorDetails());
+    }
+
+    @Test
+    void updateCategoryWithExistNameFail() {
+        CategoryRequest requestData = FakerUtils.generateCategoryRequest();
+        String id = FakerUtils.faker.internet().uuid();
+        when(mockRepository.existsByName(requestData.name())).thenReturn(true);
+
+        ResourceAlreadyExistException exception = assertThrows(
+                ResourceAlreadyExistException.class,
+                () -> categoryService.updateCategory(id, requestData));
+        String expectedMessage = String.format("A Category with the name: %s already exists. Please choose a different name and try again.", requestData.name());
+        assertEquals(expectedMessage, exception.getErrorDetails());
+    }
+
+    @Test
+    void deleteCategorySuccess() {
+        String id = FakerUtils.faker.internet().uuid();
+        when(mockRepository.existsById(id)).thenReturn(true);
+
+        categoryService.deleteById(id);
+        verify(mockRepository).deleteById(id);
+    }
+
+    @Test
+    void deleteNotExistCategoryFail() {
+        String id = FakerUtils.faker.internet().uuid();
+        when(mockRepository.existsById(id)).thenReturn(false);
+        ResourceNotFoundException exception = assertThrows(
+                ResourceNotFoundException.class,
+                () -> categoryService.deleteById(id));
+        String expectedMessage = String.format("Category with id: %s, Does not exist!", id);
+        assertEquals(expectedMessage, exception.getErrorDetails());
+    }
 }
