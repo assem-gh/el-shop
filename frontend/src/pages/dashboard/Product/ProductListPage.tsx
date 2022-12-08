@@ -1,8 +1,8 @@
 import React from "react";
-import PageHeader from "../../components/PageHeader/PageHeader";
+import PageHeader from "../../../components/PageHeader/PageHeader";
 import { Button } from "@mantine/core";
 import { MdAdd } from "react-icons/md";
-import AppTable from "../../components/AppTable/AppTable";
+import AppTable from "../../../components/AppTable/AppTable";
 
 const ProductsListPage = () => {
   return (
@@ -15,7 +15,7 @@ const ProductsListPage = () => {
           </Button>
         }
       />
-      <AppTable entity="products" />
+      <AppTable entity="product" />
     </>
   );
 };

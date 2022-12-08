@@ -1,13 +1,15 @@
+import Dashboard from "./pages/dashboard/Dashboard";
+import React, { useState } from "react";
 import {
   ColorScheme,
   ColorSchemeProvider,
   MantineProvider,
 } from "@mantine/core";
 import { Route, Routes } from "react-router-dom";
-import Dashboard from "./pages/dashboard/Dashboard";
-import { useState } from "react";
-import AddProductPage from "./pages/dashboard/AddProductPage";
-import ProductsListPage from "./pages/dashboard/ProductsListPage";
+import AddProductPage from "./pages/dashboard/Product/AddProductPage";
+import ProductsListPage from "./pages/dashboard/Product/ProductListPage";
+import AddCategoryPage from "./pages/dashboard/Category/AddCategoryPage";
+import CategoryListPage from "./pages/dashboard/Category/CategoryListPage";
 
 function App() {
   const [colorScheme, setColorScheme] = useState<ColorScheme>("light");
@@ -28,6 +30,8 @@ function App() {
           <Route path="admin" element={<Dashboard />}>
             <Route path="products/add" element={<AddProductPage />} />
             <Route path="products/list" element={<ProductsListPage />} />
+            <Route path="categories/add" element={<AddCategoryPage />} />
+            <Route path="categories/list" element={<CategoryListPage />} />
           </Route>
         </Routes>
       </MantineProvider>
