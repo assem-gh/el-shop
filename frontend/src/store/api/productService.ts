@@ -1,11 +1,11 @@
 import axiosInstance from "./axios";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { ProductModel } from "../slices/model";
-import { ProductsListResponse } from "./types";
+import { CategoriesListResponse, ProductsListResponse } from "./types";
 
 const createNewProduct = createAsyncThunk(
   "products/post",
-  async (args: any, thunkAPI) => {
+  async (args: any) => {
     const res = await axiosInstance.post<ProductModel>("/products", args, {
       headers: { "Content-Type": "multipart/form-data" },
     });
@@ -16,7 +16,7 @@ const createNewProduct = createAsyncThunk(
 
 const getAllProduct = createAsyncThunk(
   "products/list",
-  async ({ page, size }: { page: number; size: number }, thunkAPI) => {
+  async ({ page, size }: { page: number; size: number }) => {
     const res = await axiosInstance.get<ProductsListResponse>("/products", {
       params: { page, size },
     });
@@ -24,4 +24,8 @@ const getAllProduct = createAsyncThunk(
   }
 );
 
-export default { createNewProduct, getAllProduct };
+const getAllCategories = createAsyncThunk("categories/list", async () => {
+  const res = await axiosInstance.get<CategoriesListResponse>("/categories");
+  return res.data;
+});
+export default { createNewProduct, getAllProduct, getAllCategories };
