@@ -3,22 +3,38 @@ import { useAppSelector } from "../../store/hooks";
 import { selectProductById } from "../../store/slices/productSlice";
 import { SplitButton } from "../Button/SplitButton";
 import { Flex } from "@mantine/core";
+import { RootState } from "../../store/store";
+import { selectCategoryById } from "../../store/slices/categoryslice";
+import { tableData } from "../../data/tables";
 
 interface ListItemProps {
   id: string;
   fields: string[];
+  entity: keyof RootState;
 }
 
-const TableRow = ({ id, fields }: ListItemProps) => {
-  const data = useAppSelector((state) => selectProductById(state, id));
-  if (!data) return null;
+const selectData = {
+  product: selectProductById,
+  category: selectCategoryById,
+};
 
-  type ProductKey = keyof typeof data;
-  const fieldMap: Record<string, ProductKey> = {
-    Product: "images",
-    Title: "title",
-    Price: "price",
-    Category: "category",
+const TableRow = ({ id, fields, entity }: ListItemProps) => {
+  const data = useAppSelector((state) => selectData[entity](state, id));
+  if (!data) return null;
+  type ItemKey = keyof typeof data;
+  const mapFieldToKey = tableData[entity];
+
+  const cellData = (colName: string) => {
+    if (colName === "Category") {
+      // @ts-ignore
+      return data["category"]["name"];
+    }
+    if (colName === "Product") {
+      // @ts-ignore
+      return <img src={data["images"][0]} alt="Product" />;
+    }
+    const accessor = mapFieldToKey[colName] as ItemKey;
+    if (accessor) return data[accessor];
   };
 
   return (
@@ -34,15 +50,7 @@ const TableRow = ({ id, fields }: ListItemProps) => {
               direction="column"
               wrap="nowrap"
             >
-              {field === "Product" ? (
-                <img
-                  style={{ maxHeight: "72px" }}
-                  src={data.images[0]}
-                  alt="place-holder"
-                />
-              ) : (
-                data[fieldMap[field]]
-              )}
+              {cellData(field)}
             </Flex>
           </td>
         );

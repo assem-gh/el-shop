@@ -1,4 +1,4 @@
-import { ProductModel } from "../slices/model";
+import { CategoryModel, ProductModel } from "../slices/model";
 
 export interface ProductsListResponse {
   totalProducts: number;
@@ -7,3 +7,5 @@ export interface ProductsListResponse {
   hasNext: boolean;
   products: ProductModel[];
 }
+
+export type CategoriesListResponse = CategoryModel[];

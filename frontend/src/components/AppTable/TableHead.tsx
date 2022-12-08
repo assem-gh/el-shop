@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import useStyles from "./appTable.style";
 import { Flex } from "@mantine/core";
 
@@ -6,7 +6,7 @@ interface TableHeadProps {
   fields: string[];
 }
 
-const TableHead = ({ fields }: TableHeadProps) => {
+const TableHead = memo(({ fields }: TableHeadProps) => {
   const { classes } = useStyles();
   return (
     <thead>
@@ -40,6 +40,6 @@ const TableHead = ({ fields }: TableHeadProps) => {
       </tr>
     </thead>
   );
-};
+});
 
 export default TableHead;
