@@ -28,4 +28,25 @@ const getAllCategories = createAsyncThunk("categories/list", async () => {
   const res = await axiosInstance.get<CategoriesListResponse>("/categories");
   return res.data;
 });
-export default { createNewProduct, getAllProduct, getAllCategories };
+
+const deleteProduct = createAsyncThunk(
+  "products/delete",
+  async (id: string) => {
+    await axiosInstance.delete("/products/" + id);
+  }
+);
+
+const deleteCategory = createAsyncThunk(
+  "categories/delete",
+  async (id: string) => {
+    await axiosInstance.delete("/categories/" + id);
+  }
+);
+
+export default {
+  createNewProduct,
+  getAllProduct,
+  getAllCategories,
+  deleteProduct,
+  deleteCategory,
+};

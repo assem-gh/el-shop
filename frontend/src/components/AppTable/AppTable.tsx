@@ -1,5 +1,4 @@
 import React, { ChangeEvent, useState } from "react";
-import useStyles from "./appTable.style";
 import { Pagination, Paper, Table } from "@mantine/core";
 import TableRow from "./TableRow";
 import { tableData } from "../../data/tables";
@@ -20,8 +19,6 @@ const AppTable = ({ entity }: ListPageProps) => {
       itemsPerPage: 5,
     });
 
-  const {} = useStyles();
-
   const handleSelectField = (evt: ChangeEvent<HTMLSelectElement>) => {};
 
   return (
@@ -33,7 +30,13 @@ const AppTable = ({ entity }: ListPageProps) => {
           </option>
         ))}
       </select>
-      <Table fontSize="md" striped highlightOnHover withColumnBorders>
+      <Table
+        fontSize="md"
+        striped
+        highlightOnHover
+        withBorder
+        withColumnBorders
+      >
         <TableHead fields={fields} />
         <tbody>
           {itemsToShow.map((id) => (
@@ -42,12 +45,14 @@ const AppTable = ({ entity }: ListPageProps) => {
         </tbody>
       </Table>
       <Pagination
-        position="right"
-        my="md"
+        position="center"
+        mt="xl"
+        mb="sm"
         page={currentPage}
         onChange={handleChangePage}
         total={totalPages}
         size="sm"
+        withEdges
       />
     </Paper>
   );
