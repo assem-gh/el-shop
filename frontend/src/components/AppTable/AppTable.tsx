@@ -1,21 +1,26 @@
 import React, { ChangeEvent, useState } from "react";
 import useStyles from "./appTable.style";
-import { Paper, Table } from "@mantine/core";
+import { Pagination, Paper, Table } from "@mantine/core";
 import TableRow from "./TableRow";
-import { columns } from "../../data/tables";
-import { useAppSelector } from "../../store/hooks";
-import { selectProductsId } from "../../store/slices/productSlice";
+import { tableData } from "../../data/tables";
 import TableHead from "./TableHead";
+import { RootState } from "../../store/store";
+import useTablePagination from "../../hooks/usePagination";
 
 interface ListPageProps {
-  entity: "products" | "orders" | "users";
+  entity: keyof RootState;
 }
 
 const AppTable = ({ entity }: ListPageProps) => {
-  const [fields, setFields] = useState(columns[entity]);
+  const [fields, setFields] = useState(Object.keys(tableData[entity]));
 
-  const ids = useAppSelector(selectProductsId) as string[];
-  const { classes } = useStyles();
+  const { totalPages, itemsToShow, handleChangePage, currentPage } =
+    useTablePagination({
+      entity,
+      itemsPerPage: 5,
+    });
+
+  const {} = useStyles();
 
   const handleSelectField = (evt: ChangeEvent<HTMLSelectElement>) => {};
 
@@ -31,11 +36,19 @@ const AppTable = ({ entity }: ListPageProps) => {
       <Table fontSize="md" striped highlightOnHover withColumnBorders>
         <TableHead fields={fields} />
         <tbody>
-          {ids.map((id) => (
-            <TableRow key={id} id={id} fields={fields} />
+          {itemsToShow.map((id) => (
+            <TableRow entity={entity} key={id} id={id} fields={fields} />
           ))}
         </tbody>
       </Table>
+      <Pagination
+        position="right"
+        my="md"
+        page={currentPage}
+        onChange={handleChangePage}
+        total={totalPages}
+        size="sm"
+      />
     </Paper>
   );
 };
