@@ -10,6 +10,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     dispatch(productService.getAllProduct({ page: 0, size: 20 }));
+    dispatch(productService.getAllCategories());
   }, []);
   return (
     <DashboardLayout>
