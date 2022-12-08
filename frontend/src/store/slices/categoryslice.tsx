@@ -17,10 +17,16 @@ const categorySlice = createSlice({
     builder.addCase(productsAPI.getAllCategories.fulfilled, (state, action) => {
       categoryAdapter.setAll(state, action.payload);
     });
+    builder.addCase(productsAPI.deleteCategory.fulfilled, (state, action) => {
+      categoryAdapter.removeOne(state, action.meta.arg);
+    });
   },
 });
 
-export const { selectIds: selectCategoryIds, selectById: selectCategoryById } =
-  categoryAdapter.getSelectors((state: RootState) => state.category);
+export const {
+  selectIds: selectCategoryIds,
+  selectById: selectCategoryById,
+  selectAll: selectCategories,
+} = categoryAdapter.getSelectors((state: RootState) => state.category);
 
 export const categoryReducer = categorySlice.reducer;

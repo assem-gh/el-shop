@@ -27,7 +27,9 @@ const productSlice = createSlice({
       state.hasNext = action.payload.hasNext;
       state.totalProducts = action.payload.totalProducts;
       state.currentPage = action.payload.currentPage;
-
+    });
+    builder.addCase(productsAPI.deleteCategory.fulfilled, (state, action) => {
+      productAdapter.removeOne(state, action.meta.arg);
     });
   },
 });

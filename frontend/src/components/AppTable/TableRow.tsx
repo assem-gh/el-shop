@@ -2,7 +2,7 @@ import React from "react";
 import { useAppSelector } from "../../store/hooks";
 import { selectProductById } from "../../store/slices/productSlice";
 import { SplitButton } from "../Button/SplitButton";
-import { Flex } from "@mantine/core";
+import { Flex, Image } from "@mantine/core";
 import { RootState } from "../../store/store";
 import { selectCategoryById } from "../../store/slices/categoryslice";
 import { tableData } from "../../data/tables";
@@ -30,8 +30,16 @@ const TableRow = ({ id, fields, entity }: ListItemProps) => {
       return data["category"]["name"];
     }
     if (colName === "Product") {
-      // @ts-ignore
-      return <img src={data["images"][0]} alt="Product" />;
+      return (
+        <Image
+          width={200}
+          height={80}
+          fit="contain"
+          // @ts-ignore
+          src={data["images"][0]}
+          alt="Product"
+        />
+      );
     }
     const accessor = mapFieldToKey[colName] as ItemKey;
     if (accessor) return data[accessor];
@@ -64,7 +72,7 @@ const TableRow = ({ id, fields, entity }: ListItemProps) => {
           direction="column"
           wrap="nowrap"
         >
-          <SplitButton />
+          <SplitButton id={id} entity={entity} />
         </Flex>
       </td>
     </tr>
