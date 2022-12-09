@@ -9,12 +9,7 @@ const idsByEntity = {
   category: selectCategoryIds,
 };
 
-interface Props {
-  entity: keyof RootState;
-  itemsPerPage: number;
-}
-
-const UsePagination = ({ entity, itemsPerPage }: Props) => {
+const UsePagination = (entity: keyof RootState, itemsPerPage: number) => {
   const [currentPage, setcurrentPage] = useState(1);
   const endIndex = currentPage * itemsPerPage;
   const startIndex = endIndex - itemsPerPage;

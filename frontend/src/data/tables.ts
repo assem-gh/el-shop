@@ -13,6 +13,7 @@ export const tableData: TableData = {
     Title: "title",
     Category: "category",
     Price: "price",
+    Description: "description",
   },
   category: {
     Name: "name",
