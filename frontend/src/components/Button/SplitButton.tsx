@@ -1,29 +1,26 @@
-import { ActionIcon, Button, createStyles, Group, Menu } from "@mantine/core";
+import { ActionIcon, Button, Group, Menu } from "@mantine/core";
 import { TbChevronDown, TbTrash } from "react-icons/tb";
 import { MdOutlineEdit } from "react-icons/md";
+import { useStyles } from "./splitButton.style";
+import { useState } from "react";
+import { RootState } from "../../store/store";
+import Modal from "../Modal/Modal";
 
-const useStyles = createStyles((theme) => ({
-  button: {
-    borderRadius: theme.radius.xl,
-    borderTopRightRadius: 0,
-    borderBottomRightRadius: 0,
-  },
+interface SplitButtonProps {
+  entity: keyof RootState;
+  id: string;
+}
 
-  menuControl: {
-    borderRadius: theme.radius.xl,
-    borderTopLeftRadius: 0,
-    borderBottomLeftRadius: 0,
-    border: 0,
-    borderLeft: `1px solid ${
-      theme.colorScheme === "dark" ? theme.colors.dark[7] : theme.white
-    }`,
-  },
-}));
+export function SplitButton({ entity, id }: SplitButtonProps) {
+  const [openModal, setOpenModal] = useState<"Edit" | "Delete" | "">("");
 
-export function SplitButton() {
   const { classes, theme } = useStyles();
   const menuIconColor =
     theme.colors[theme.primaryColor][theme.colorScheme === "dark" ? 5 : 6];
+
+  const handleDeleteItem = () => {
+    setOpenModal("Delete");
+  };
 
   return (
     <Group noWrap spacing={0}>
@@ -45,11 +42,20 @@ export function SplitButton() {
           <Menu.Item icon={<MdOutlineEdit size={16} color={menuIconColor} />}>
             Edit
           </Menu.Item>
-          <Menu.Item icon={<TbTrash size={16} color={menuIconColor} />}>
+          <Menu.Item
+            onClick={handleDeleteItem}
+            icon={<TbTrash size={16} color={menuIconColor} />}
+          >
             Delete
           </Menu.Item>
         </Menu.Dropdown>
       </Menu>
+      <Modal
+        openModal={openModal}
+        setOpenModal={setOpenModal}
+        id={id}
+        entity={entity}
+      />
     </Group>
   );
 }
