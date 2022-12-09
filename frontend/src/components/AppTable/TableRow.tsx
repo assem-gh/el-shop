@@ -9,7 +9,7 @@ import { tableData } from "../../data/tables";
 
 interface ListItemProps {
   id: string;
-  fields: string[];
+  selectedColumns: string[];
   entity: keyof RootState;
 }
 
@@ -18,7 +18,7 @@ const selectData = {
   category: selectCategoryById,
 };
 
-const TableRow = ({ id, fields, entity }: ListItemProps) => {
+const TableRow = ({ id, selectedColumns, entity }: ListItemProps) => {
   const data = useAppSelector((state) => selectData[entity](state, id));
   if (!data) return null;
   type ItemKey = keyof typeof data;
@@ -47,9 +47,9 @@ const TableRow = ({ id, fields, entity }: ListItemProps) => {
 
   return (
     <tr className="row" key={data.id}>
-      {fields.map((field, i) => {
+      {selectedColumns.map((columnName, i) => {
         return (
-          <td key={field + i}>
+          <td key={columnName + i}>
             <Flex
               mih={50}
               gap="xs"
@@ -58,7 +58,7 @@ const TableRow = ({ id, fields, entity }: ListItemProps) => {
               direction="column"
               wrap="nowrap"
             >
-              {cellData(field)}
+              {cellData(columnName)}
             </Flex>
           </td>
         );

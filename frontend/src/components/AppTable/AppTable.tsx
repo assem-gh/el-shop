@@ -1,35 +1,44 @@
-import React, { ChangeEvent, useState } from "react";
-import { Pagination, Paper, Table } from "@mantine/core";
+import React, { useState } from "react";
+import { Group, Pagination, Paper, Select, Table } from "@mantine/core";
 import TableRow from "./TableRow";
 import { tableData } from "../../data/tables";
 import TableHead from "./TableHead";
 import { RootState } from "../../store/store";
 import useTablePagination from "../../hooks/usePagination";
+import SelectColumn from "../Select/SelectColumn";
 
 interface ListPageProps {
   entity: keyof RootState;
 }
 
 const AppTable = ({ entity }: ListPageProps) => {
-  const [fields, setFields] = useState(Object.keys(tableData[entity]));
+  const defaultColumns = Object.keys(tableData[entity]);
+  const [selectedColumns, setSelectedColumns] = useState(defaultColumns);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+
+  const handleItemPerPageChange = (value: string) => {
+    setItemsPerPage(parseInt(value));
+  };
 
   const { totalPages, itemsToShow, handleChangePage, currentPage } =
-    useTablePagination({
-      entity,
-      itemsPerPage: 5,
-    });
-
-  const handleSelectField = (evt: ChangeEvent<HTMLSelectElement>) => {};
+    useTablePagination(entity, itemsPerPage);
 
   return (
     <Paper radius="md" shadow="md" p="md" withBorder>
-      <select onChange={handleSelectField}>
-        {fields.map((field) => (
-          <option key={field} onChange={() => {}}>
-            {field}
-          </option>
-        ))}
-      </select>
+      <Group my="md" position="right">
+        <SelectColumn
+          selectedColumns={selectedColumns}
+          defaultColumns={defaultColumns}
+          setSelectedColumns={setSelectedColumns}
+        />
+        <Select
+          w="64px"
+          data={["5", "10", "15", "20"]}
+          value={`${itemsPerPage}`}
+          onChange={handleItemPerPageChange}
+        />
+      </Group>
+
       <Table
         fontSize="md"
         striped
@@ -37,10 +46,15 @@ const AppTable = ({ entity }: ListPageProps) => {
         withBorder
         withColumnBorders
       >
-        <TableHead fields={fields} />
+        <TableHead fields={selectedColumns} />
         <tbody>
           {itemsToShow.map((id) => (
-            <TableRow entity={entity} key={id} id={id} fields={fields} />
+            <TableRow
+              entity={entity}
+              key={id}
+              id={id}
+              selectedColumns={selectedColumns}
+            />
           ))}
         </tbody>
       </Table>
