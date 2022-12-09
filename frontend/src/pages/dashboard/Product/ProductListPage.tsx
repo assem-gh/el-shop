@@ -3,15 +3,21 @@ import PageHeader from "../../../components/PageHeader/PageHeader";
 import { Button } from "@mantine/core";
 import { MdAdd } from "react-icons/md";
 import AppTable from "../../../components/AppTable/AppTable";
+import { useNavigate } from "react-router-dom";
 
 const ProductsListPage = () => {
+  const navigate = useNavigate();
   return (
     <>
       <PageHeader
         title="Products"
         actions={
-          <Button variant="light" leftIcon={<MdAdd />}>
-            create
+          <Button
+            onClick={() => navigate("/admin/products/add")}
+            variant="light"
+            leftIcon={<MdAdd />}
+          >
+            Add new Product
           </Button>
         }
       />

@@ -1,4 +1,4 @@
-import React, { Dispatch, ReactNode, SetStateAction } from "react";
+import React, { Dispatch, ReactNode, SetStateAction, useCallback } from "react";
 import { Modal as MantineModal } from "@mantine/core";
 
 interface ModalProps {
@@ -16,10 +16,11 @@ const BaseModal = ({
   children,
   title = "",
 }: ModalProps) => {
+  const handleClose = useCallback(() => setOpenModal(false), [setOpenModal]);
   return (
     <MantineModal
       opened={Boolean(openModal)}
-      onClose={() => setOpenModal(false)}
+      onClose={handleClose}
       withCloseButton={withCloseBtn}
       title={title}
     >

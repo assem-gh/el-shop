@@ -31,11 +31,6 @@ export const navLinks = [
     icon: MdOutlineCategory,
     links: [
       {
-        label: "Add Category",
-        path: "/admin/categories/add",
-        icon: MdOutlineAddBox,
-      },
-      {
         label: "List Categories",
         path: "/admin/categories/list",
         icon: MdOutlineFormatListBulleted,

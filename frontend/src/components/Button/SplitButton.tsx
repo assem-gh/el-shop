@@ -2,7 +2,7 @@ import { ActionIcon, Button, Group, Menu } from "@mantine/core";
 import { TbChevronDown, TbTrash } from "react-icons/tb";
 import { MdOutlineEdit } from "react-icons/md";
 import { useStyles } from "./splitButton.style";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { RootState } from "../../store/store";
 import DeleteModal from "../Modal/DeleteModal";
 
@@ -12,15 +12,15 @@ interface SplitButtonProps {
 }
 
 export function SplitButton({ entity, id }: SplitButtonProps) {
-  const [openModal, setOpenModal] = useState<"Edit" | "Delete" | "">("");
+  const [openModal, setOpenModal] = useState<boolean>(false);
 
   const { classes, theme } = useStyles();
   const menuIconColor =
     theme.colors[theme.primaryColor][theme.colorScheme === "dark" ? 5 : 6];
 
-  const handleDeleteItem = () => {
-    setOpenModal("Delete");
-  };
+  const handleDeleteItem = useCallback(() => {
+    setOpenModal(true);
+  }, [setOpenModal]);
 
   return (
     <Group noWrap spacing={0}>

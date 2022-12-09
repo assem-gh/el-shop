@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useCallback } from "react";
 import productService from "../../store/api/productService";
 import { useAppDispatch } from "../../store/hooks";
 import BaseModal from "./BaseModal";
@@ -33,6 +33,8 @@ const AddCategoryModal = ({
     setOpenModal(false);
   };
 
+  const handleCancel = useCallback(() => setOpenModal(false), [setOpenModal]);
+
   return (
     <BaseModal
       title="Add new Category:"
@@ -49,11 +51,7 @@ const AddCategoryModal = ({
           />
         </Stack>
         <Group position="right">
-          <Button
-            variant="outline"
-            color="gray"
-            onClick={() => setOpenModal(false)}
-          >
+          <Button variant="outline" color="gray" onClick={handleCancel}>
             Cancel
           </Button>
           <Button variant="filled" type="submit">

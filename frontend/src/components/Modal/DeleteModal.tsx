@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useCallback } from "react";
 import { RootState } from "../../store/store";
 import productService from "../../store/api/productService";
 import { AsyncThunk } from "@reduxjs/toolkit";
@@ -26,9 +26,12 @@ const DeleteModal = ({
   setOpenModal,
 }: DeleteModalProps) => {
   const dispatch = useAppDispatch();
-  const handleDelete = () => {
+
+  const handleDelete = useCallback(() => {
     dispatch(mapEntities[entity](id));
-  };
+  }, [entity, id, dispatch]);
+  
+  const handleCancel = useCallback(() => setOpenModal(false), [setOpenModal]);
 
   return (
     <BaseModal openModal={openModal} setOpenModal={setOpenModal}>
@@ -44,11 +47,7 @@ const DeleteModal = ({
         undone.
       </Text>
       <Group position="right">
-        <Button
-          variant="outline"
-          color="gray"
-          onClick={() => setOpenModal(false)}
-        >
+        <Button variant="outline" color="gray" onClick={handleCancel}>
           Cancel
         </Button>
         <Button variant="filled" onClick={handleDelete}>

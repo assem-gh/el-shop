@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 import PageHeader from "../../../components/PageHeader/PageHeader";
-import { Button } from "@mantine/core";
 import { MdAdd } from "react-icons/md";
-import AppTable from "../../../components/AppTable/AppTable";
+import { Button } from "@mantine/core";
+import AddProductForm from "../../../components/AddProductForm/AddProductForm";
 import AddCategoryModal from "../../../components/Modal/AddCategoryModal";
 
-const CategoryListPage = () => {
+const AddProductPage = () => {
   const [openModal, setOpenModal] = useState(false);
   return (
     <>
       <PageHeader
-        title="Categories"
+        title="Add New Product"
         actions={
           <Button
             onClick={() => setOpenModal((prev) => !prev)}
@@ -21,10 +21,10 @@ const CategoryListPage = () => {
           </Button>
         }
       />
-      <AppTable entity="category" />
+      <AddProductForm />
       <AddCategoryModal openModal={openModal} setOpenModal={setOpenModal} />
     </>
   );
 };
 
-export default CategoryListPage;
+export default AddProductPage;
