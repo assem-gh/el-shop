@@ -8,4 +8,8 @@ export interface ProductsListResponse {
   products: ProductModel[];
 }
 
+export interface CreateCategoryRequest {
+  name: string;
+}
+
 export type CategoriesListResponse = CategoryModel[];

@@ -20,6 +20,9 @@ const categorySlice = createSlice({
     builder.addCase(productsAPI.deleteCategory.fulfilled, (state, action) => {
       categoryAdapter.removeOne(state, action.meta.arg);
     });
+    builder.addCase(productsAPI.addCategory.fulfilled, (state, action) => {
+      categoryAdapter.addOne(state, action.payload);
+    });
   },
 });
 

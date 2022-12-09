@@ -1,10 +1,11 @@
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { RootState } from "../../store/store";
 import productService from "../../store/api/productService";
 import { AsyncThunk } from "@reduxjs/toolkit";
 import { Button, Group, Stack, Text } from "@mantine/core";
 import { useAppDispatch } from "../../store/hooks";
 import { MdOutlineReportGmailerrorred } from "react-icons/md";
+import BaseModal from "./BaseModal";
 
 const mapEntities: Record<keyof RootState, AsyncThunk<void, string, any>> = {
   product: productService.deleteProduct,
@@ -12,19 +13,25 @@ const mapEntities: Record<keyof RootState, AsyncThunk<void, string, any>> = {
 };
 
 interface DeleteModalProps {
-  onCancel: () => void;
   id: string;
   entity: keyof RootState;
+  openModal: boolean;
+  setOpenModal: Dispatch<SetStateAction<boolean>>;
 }
 
-const DeleteModalContent = ({ onCancel, id, entity }: DeleteModalProps) => {
+const DeleteModal = ({
+  id,
+  entity,
+  openModal,
+  setOpenModal,
+}: DeleteModalProps) => {
   const dispatch = useAppDispatch();
   const handleDelete = () => {
     dispatch(mapEntities[entity](id));
   };
 
   return (
-    <>
+    <BaseModal openModal={openModal} setOpenModal={setOpenModal}>
       <Stack justify="center" align="center" spacing={0}>
         <MdOutlineReportGmailerrorred color="red" size={48} />
         <Text mb="md" weight="bold" size="lg" align="center">
@@ -37,15 +44,19 @@ const DeleteModalContent = ({ onCancel, id, entity }: DeleteModalProps) => {
         undone.
       </Text>
       <Group position="right">
-        <Button variant="outline" color="gray" onClick={onCancel}>
+        <Button
+          variant="outline"
+          color="gray"
+          onClick={() => setOpenModal(false)}
+        >
           Cancel
         </Button>
         <Button variant="filled" onClick={handleDelete}>
           Delete
         </Button>
       </Group>
-    </>
+    </BaseModal>
   );
 };
 
-export default DeleteModalContent;
+export default DeleteModal;

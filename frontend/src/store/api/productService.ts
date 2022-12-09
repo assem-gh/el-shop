@@ -1,7 +1,11 @@
 import axiosInstance from "./axios";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { ProductModel } from "../slices/model";
-import { CategoriesListResponse, ProductsListResponse } from "./types";
+import { CategoryModel, ProductModel } from "../slices/model";
+import {
+  CategoriesListResponse,
+  CreateCategoryRequest,
+  ProductsListResponse,
+} from "./types";
 
 const createNewProduct = createAsyncThunk(
   "products/post",
@@ -36,6 +40,13 @@ const deleteProduct = createAsyncThunk(
   }
 );
 
+const addCategory = createAsyncThunk(
+  "categories/add",
+  async (arg: CreateCategoryRequest) => {
+    const res = await axiosInstance.post<CategoryModel>("/categories", arg);
+    return res.data;
+  }
+);
 const deleteCategory = createAsyncThunk(
   "categories/delete",
   async (id: string) => {
@@ -49,4 +60,5 @@ export default {
   getAllCategories,
   deleteProduct,
   deleteCategory,
+  addCategory,
 };

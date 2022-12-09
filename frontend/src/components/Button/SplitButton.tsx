@@ -4,7 +4,7 @@ import { MdOutlineEdit } from "react-icons/md";
 import { useStyles } from "./splitButton.style";
 import { useState } from "react";
 import { RootState } from "../../store/store";
-import Modal from "../Modal/Modal";
+import DeleteModal from "../Modal/DeleteModal";
 
 interface SplitButtonProps {
   entity: keyof RootState;
@@ -50,7 +50,7 @@ export function SplitButton({ entity, id }: SplitButtonProps) {
           </Menu.Item>
         </Menu.Dropdown>
       </Menu>
-      <Modal
+      <DeleteModal
         openModal={openModal}
         setOpenModal={setOpenModal}
         id={id}
