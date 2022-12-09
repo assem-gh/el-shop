@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import PageHeader from "../../../components/PageHeader/PageHeader";
 import { Button } from "@mantine/core";
 import { MdAdd } from "react-icons/md";
@@ -7,16 +7,17 @@ import { useNavigate } from "react-router-dom";
 
 const ProductsListPage = () => {
   const navigate = useNavigate();
+
+  const handleClick = useCallback(
+    () => navigate("/admin/products/add"),
+    [navigate]
+  );
   return (
     <>
       <PageHeader
         title="Products"
         actions={
-          <Button
-            onClick={() => navigate("/admin/products/add")}
-            variant="light"
-            leftIcon={<MdAdd />}
-          >
+          <Button onClick={handleClick} variant="light" leftIcon={<MdAdd />}>
             Add new Product
           </Button>
         }

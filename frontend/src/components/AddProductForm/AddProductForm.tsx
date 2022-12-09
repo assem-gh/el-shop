@@ -95,7 +95,7 @@ const AddProductForm = () => {
             {...form.getInputProps("title")}
             withAsterisk
           />
-          <Group grow>
+          <Group grow align="flex-start">
             <NumberInput
               placeholder="99.99"
               label="Price"
