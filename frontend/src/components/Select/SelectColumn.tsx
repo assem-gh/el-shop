@@ -1,4 +1,10 @@
-import React, { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
+import React, {
+  ChangeEvent,
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useState,
+} from "react";
 import { Checkbox, Group, Menu, Text, UnstyledButton } from "@mantine/core";
 import { TbChevronDown } from "react-icons/tb";
 import { useStyles } from "./selectColumn.style";
@@ -37,6 +43,9 @@ const SelectColumn = ({
         setSelectedColumns((prev) => prev.filter((field) => field !== column));
     };
 
+  const onOpen = useCallback(() => setOpened(true), [setOpened]);
+  const onClose = useCallback(() => setOpened(false), [setOpened]);
+
   const items = defaultColumns.map((columnName) => (
     <Menu.Item
       key={columnName}
@@ -52,12 +61,7 @@ const SelectColumn = ({
     </Menu.Item>
   ));
   return (
-    <Menu
-      onOpen={() => setOpened(true)}
-      onClose={() => setOpened(false)}
-      radius="sm"
-      width="target"
-    >
+    <Menu onOpen={onOpen} onClose={onClose} radius="sm" width="target">
       <Menu.Target>
         <UnstyledButton className={classes.control}>
           <Group spacing="xs">

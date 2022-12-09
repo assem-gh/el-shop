@@ -47,9 +47,9 @@ const TableRow = ({ id, selectedColumns, entity }: ListItemProps) => {
 
   return (
     <tr className="row" key={data.id}>
-      {selectedColumns.map((columnName, i) => {
+      {selectedColumns.map((columnName) => {
         return (
-          <td key={columnName + i}>
+          <td key={columnName}>
             <Flex
               mih={50}
               gap="xs"

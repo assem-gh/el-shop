@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Group, Pagination, Paper, Select, Table } from "@mantine/core";
 import TableRow from "./TableRow";
 import { tableData } from "../../data/tables";
@@ -16,9 +16,12 @@ const AppTable = ({ entity }: ListPageProps) => {
   const [selectedColumns, setSelectedColumns] = useState(defaultColumns);
   const [itemsPerPage, setItemsPerPage] = useState(10);
 
-  const handleItemPerPageChange = (value: string) => {
-    setItemsPerPage(parseInt(value));
-  };
+  const handleItemPerPageChange = useCallback(
+    (value: string) => {
+      setItemsPerPage(parseInt(value));
+    },
+    [setItemsPerPage]
+  );
 
   const { totalPages, itemsToShow, handleChangePage, currentPage } =
     useTablePagination(entity, itemsPerPage);
