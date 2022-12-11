@@ -1,5 +1,9 @@
 import { createEntityAdapter, createSlice } from "@reduxjs/toolkit";
-import productsAPI from "../api/productService";
+import {
+  addCategory,
+  deleteCategory,
+  getAllCategories,
+} from "../api/productService";
 import { RootState } from "../store";
 import { CategoryModel } from "./model";
 
@@ -14,13 +18,13 @@ const categorySlice = createSlice({
   reducers: {},
 
   extraReducers: function (builder) {
-    builder.addCase(productsAPI.getAllCategories.fulfilled, (state, action) => {
+    builder.addCase(getAllCategories.fulfilled, (state, action) => {
       categoryAdapter.setAll(state, action.payload);
     });
-    builder.addCase(productsAPI.deleteCategory.fulfilled, (state, action) => {
-      categoryAdapter.removeOne(state, action.meta.arg);
+    builder.addCase(deleteCategory.fulfilled, (state, action) => {
+      categoryAdapter.removeOne(state, action.meta.arg.id);
     });
-    builder.addCase(productsAPI.addCategory.fulfilled, (state, action) => {
+    builder.addCase(addCategory.fulfilled, (state, action) => {
       categoryAdapter.addOne(state, action.payload);
     });
   },

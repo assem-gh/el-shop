@@ -1,5 +1,9 @@
 import { createEntityAdapter, createSlice } from "@reduxjs/toolkit";
-import productsAPI from "../api/productService";
+import {
+  createNewProduct,
+  deleteProduct,
+  getAllProduct,
+} from "../api/productService";
 import { ProductModel } from "./model";
 import { RootState } from "../store";
 
@@ -19,17 +23,17 @@ const productSlice = createSlice({
   reducers: {},
 
   extraReducers(builder) {
-    builder.addCase(productsAPI.createNewProduct.fulfilled, (state, action) => {
+    builder.addCase(createNewProduct.fulfilled, (state, action) => {
       productAdapter.addOne(state, action.payload);
     });
-    builder.addCase(productsAPI.getAllProduct.fulfilled, (state, action) => {
+    builder.addCase(getAllProduct.fulfilled, (state, action) => {
       productAdapter.addMany(state, action.payload.products);
       state.hasNext = action.payload.hasNext;
       state.totalProducts = action.payload.totalProducts;
       state.currentPage = action.payload.currentPage;
     });
-    builder.addCase(productsAPI.deleteProduct.fulfilled, (state, action) => {
-      productAdapter.removeOne(state, action.meta.arg);
+    builder.addCase(deleteProduct.fulfilled, (state, action) => {
+      productAdapter.removeOne(state, action.meta.arg.id);
     });
   },
 });
