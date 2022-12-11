@@ -3,14 +3,17 @@ import DashboardLayout from "../../components/layout/DashboardLayout/DashboardLa
 import { Group } from "@mantine/core";
 import { Outlet } from "react-router-dom";
 import { useAppDispatch } from "../../store/hooks";
-import productService from "../../store/api/productService";
+import {
+  getAllCategories,
+  getAllProduct,
+} from "../../store/api/productService";
 
 const Dashboard = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(productService.getAllProduct({ page: 0, size: 20 }));
-    dispatch(productService.getAllCategories());
+    dispatch(getAllProduct({ page: 0, size: 20 }));
+    dispatch(getAllCategories());
   }, []);
   return (
     <DashboardLayout>

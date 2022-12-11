@@ -4,61 +4,84 @@ import { CategoryModel, ProductModel } from "../slices/model";
 import {
   CategoriesListResponse,
   CreateCategoryRequest,
+  DeleteArg,
   ProductsListResponse,
 } from "./types";
 
-const createNewProduct = createAsyncThunk(
-  "products/post",
-  async (args: any) => {
-    const res = await axiosInstance.post<ProductModel>("/products", args, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
-    console.log("[Create Product thunk]: ", res.data);
-    return res.data;
+export const createNewProduct = createAsyncThunk(
+  "products/add",
+  async (args: any, { rejectWithValue }) => {
+    try {
+      const res = await axiosInstance.post<ProductModel>("/products", args, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      return res.data;
+    } catch (err: any) {
+      return rejectWithValue(err.response.data);
+    }
   }
 );
 
-const getAllProduct = createAsyncThunk(
+export const getAllProduct = createAsyncThunk(
   "products/list",
-  async ({ page, size }: { page: number; size: number }) => {
-    const res = await axiosInstance.get<ProductsListResponse>("/products", {
-      params: { page, size },
-    });
-    return res.data;
+  async (
+    { page, size }: { page: number; size: number },
+    { rejectWithValue }
+  ) => {
+    try {
+      const res = await axiosInstance.get<ProductsListResponse>("/products", {
+        params: { page, size },
+      });
+      return res.data;
+    } catch (err: any) {
+      return rejectWithValue(err.response.data);
+    }
   }
 );
 
-const getAllCategories = createAsyncThunk("categories/list", async () => {
-  const res = await axiosInstance.get<CategoriesListResponse>("/categories");
-  return res.data;
-});
+export const getAllCategories = createAsyncThunk(
+  "categories/list",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await axiosInstance.get<CategoriesListResponse>(
+        "/categories"
+      );
+      return res.data;
+    } catch (err: any) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
 
-const deleteProduct = createAsyncThunk(
+export const deleteProduct = createAsyncThunk<void, DeleteArg>(
   "products/delete",
-  async (id: string) => {
-    await axiosInstance.delete("/products/" + id);
+  async ({ id }, { rejectWithValue }) => {
+    try {
+      await axiosInstance.delete("/products/" + id);
+    } catch (err: any) {
+      return rejectWithValue(err.response.data);
+    }
   }
 );
 
-const addCategory = createAsyncThunk(
+export const addCategory = createAsyncThunk(
   "categories/add",
-  async (arg: CreateCategoryRequest) => {
-    const res = await axiosInstance.post<CategoryModel>("/categories", arg);
-    return res.data;
+  async (arg: CreateCategoryRequest, { rejectWithValue }) => {
+    try {
+      const res = await axiosInstance.post<CategoryModel>("/categories", arg);
+      return res.data;
+    } catch (err: any) {
+      return rejectWithValue(err.response.data);
+    }
   }
 );
-const deleteCategory = createAsyncThunk(
+export const deleteCategory = createAsyncThunk<void, DeleteArg>(
   "categories/delete",
-  async (id: string) => {
-    await axiosInstance.delete("/categories/" + id);
+  async ({ id }, { rejectWithValue }) => {
+    try {
+      await axiosInstance.delete("/categories/" + id);
+    } catch (err: any) {
+      return rejectWithValue(err.response.data);
+    }
   }
 );
-
-export default {
-  createNewProduct,
-  getAllProduct,
-  getAllCategories,
-  deleteProduct,
-  deleteCategory,
-  addCategory,
-};
