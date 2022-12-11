@@ -1,5 +1,5 @@
-import React, { Dispatch, SetStateAction, useCallback } from "react";
-import productService from "../../store/api/productService";
+import { Dispatch, SetStateAction, useCallback, useState } from "react";
+import { addCategory } from "../../store/api/productService";
 import { useAppDispatch } from "../../store/hooks";
 import BaseModal from "./BaseModal";
 import { useForm, zodResolver } from "@mantine/form";
@@ -20,6 +20,7 @@ const AddCategoryModal = ({
   openModal,
   setOpenModal,
 }: AddCategoryModalProps) => {
+  const [loading, setLoading] = useState(false);
   const form = useForm({
     initialValues: {
       name: "",
@@ -29,8 +30,15 @@ const AddCategoryModal = ({
 
   const dispatch = useAppDispatch();
   const handleSubmit = async (values: CreateCategoryRequest) => {
-    dispatch(productService.addCategory(values)).unwrap();
-    setOpenModal(false);
+    setLoading(true);
+    try {
+      await dispatch(addCategory(values)).unwrap();
+      setOpenModal(false);
+      setLoading(false);
+      form.reset();
+    } catch (err) {
+      setLoading(false);
+    }
   };
 
   const handleCancel = useCallback(() => setOpenModal(false), [setOpenModal]);
@@ -41,6 +49,7 @@ const AddCategoryModal = ({
       withCloseBtn
       openModal={openModal}
       setOpenModal={setOpenModal}
+      loading={loading}
     >
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <Stack justify="center" align="stretch" my="md">

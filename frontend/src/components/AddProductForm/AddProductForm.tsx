@@ -4,6 +4,7 @@ import {
   Container,
   Group,
   Image,
+  LoadingOverlay,
   NumberInput,
   Paper,
   Select,
@@ -18,7 +19,7 @@ import { useForm, zodResolver } from "@mantine/form";
 import { z } from "zod";
 import { Dropzone, FileWithPath, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import { BiPhotoAlbum } from "react-icons/bi";
-import productService from "../../store/api/productService";
+import { createNewProduct } from "../../store/api/productService";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { TbFileUpload, TbPhoto, TbX } from "react-icons/all";
 import { useNavigate } from "react-router-dom";
@@ -36,6 +37,7 @@ export type NewProductType = z.infer<typeof schema>;
 
 const AddProductForm = () => {
   const [files, setFiles] = useState<FileWithPath[]>([]);
+  const [loading, setLoading] = useState(false);
   const theme = useMantineTheme();
 
   const categories = useAppSelector(selectCategories).map((category) => ({
@@ -70,24 +72,33 @@ const AddProductForm = () => {
   const navigate = useNavigate();
 
   const handleSubmit = async (values: NewProductType) => {
-    const formData = new FormData();
-    const json = JSON.stringify(values);
-    const blob = new Blob([json], {
-      type: "application/json",
-    });
-    formData.append("data", blob);
+    setLoading(true);
+    try {
+      const formData = new FormData();
+      const json = JSON.stringify(values);
+      const blob = new Blob([json], {
+        type: "application/json",
+      });
+      formData.append("data", blob);
 
-    files.forEach((file) => {
-      formData.append("images", file);
-    });
+      files.forEach((file) => {
+        formData.append("images", file);
+      });
 
-    dispatch(productService.createNewProduct(formData));
-    navigate("/admin/products/list");
+      await dispatch(createNewProduct(formData)).unwrap();
+      setLoading(false);
+      form.reset();
+      setFiles([]);
+      navigate("/admin/products/list");
+    } catch (err) {
+      setLoading(false);
+    }
   };
 
   return (
     <Container size="sm" px="xs">
       <form onSubmit={form.onSubmit(handleSubmit)}>
+        <LoadingOverlay visible={loading} />
         <Paper withBorder p="md" radius="md">
           <TextInput
             label="Product name"
