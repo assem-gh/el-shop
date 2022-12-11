@@ -1,5 +1,7 @@
 package com.elshop.backend.product;
 
+import com.elshop.backend.category.CategoryRepository;
+import com.elshop.backend.category.model.Category;
 import com.elshop.backend.common.KeyGenerateService;
 import com.elshop.backend.exception.ResourceNotFoundException;
 import com.elshop.backend.product.model.Product;
@@ -20,6 +22,7 @@ public class ProductService {
 
     private final KeyGenerateService keyGenerateService;
     private final ProductRepository productRepository;
+    private final CategoryRepository categoryRepository;
 
     public Product getById(String id) {
         Optional<Product> productToFind = productRepository.findById(id);
@@ -31,9 +34,15 @@ public class ProductService {
     public Product createNewProduct(ProductRequest newProductData, String id, List<String> images) {
         String slug = keyGenerateService.generateSlug(newProductData.title());
 
+        Category category = categoryRepository
+                .findById(newProductData.category())
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Category", newProductData.category())
+                );
+
         return productRepository.save(new Product(id, slug,
                 newProductData.title(), newProductData.price(),
-                images, newProductData.category(), newProductData.brand(), newProductData.description()));
+                images, category, null, newProductData.description()));
     }
 
     public ProductsListResponse getAll(int page, int size) {

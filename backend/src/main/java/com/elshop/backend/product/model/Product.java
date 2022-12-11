@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -20,6 +21,7 @@ public record Product(
         List<String> images,
         @DBRef
         Category category,
+        @Null
         Brand brand,
         String description
 ) {
