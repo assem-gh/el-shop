@@ -15,7 +15,7 @@ import {
   deleteProduct,
 } from "../api/productService";
 import { ErrorResponse } from "../api/types";
-import { createNotification } from "../../utils";
+import { createNotification } from "../../components/Notification/createNotification";
 
 export const NotificationMiddleware = createListenerMiddleware({
   onError: (e, errorInfo) => {
