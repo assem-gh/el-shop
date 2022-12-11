@@ -41,18 +41,18 @@ public class FakerUtils {
                 productRequest.title(),
                 productRequest.price(),
                 images,
-                productRequest.category(),
-                productRequest.brand(),
+                generateCategory(),
+                null,
                 productRequest.description()
         );
     }
 
     public static ProductRequest generateFakeProductRequest(Category category) {
         String title = faker.commerce().productName();
-        Brand brand = new Brand(faker.internet().uuid(), faker.company().name());
+        // Brand brand = new Brand(faker.internet().uuid(), faker.company().name());
         String description = faker.lorem().paragraph(5);
         BigDecimal price = new BigDecimal(faker.commerce().price(1, 1000));
-        return new ProductRequest(title, price, category, brand, description);
+        return new ProductRequest(title, price, category.id(), description);
     }
 
     public static ProductRequest generateFakeProductRequest() {
