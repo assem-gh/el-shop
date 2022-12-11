@@ -1,5 +1,5 @@
 import React, { Dispatch, ReactNode, SetStateAction, useCallback } from "react";
-import { Modal as MantineModal } from "@mantine/core";
+import { LoadingOverlay, Modal as MantineModal } from "@mantine/core";
 
 interface ModalProps {
   openModal: boolean;
@@ -7,6 +7,7 @@ interface ModalProps {
   children: ReactNode;
   withCloseBtn?: boolean;
   title?: string;
+  loading?: boolean;
 }
 
 const BaseModal = ({
@@ -14,16 +15,18 @@ const BaseModal = ({
   setOpenModal,
   withCloseBtn = false,
   children,
+  loading = false,
   title = "",
 }: ModalProps) => {
   const handleClose = useCallback(() => setOpenModal(false), [setOpenModal]);
   return (
     <MantineModal
-      opened={Boolean(openModal)}
+      opened={openModal}
       onClose={handleClose}
       withCloseButton={withCloseBtn}
       title={title}
     >
+      <LoadingOverlay visible={loading} />
       {children}
     </MantineModal>
   );

@@ -1,15 +1,16 @@
 import React, { Dispatch, SetStateAction, useCallback } from "react";
 import { RootState } from "../../store/store";
-import productService from "../../store/api/productService";
+import { deleteCategory, deleteProduct } from "../../store/api/productService";
 import { AsyncThunk } from "@reduxjs/toolkit";
 import { Button, Group, Stack, Text } from "@mantine/core";
 import { useAppDispatch } from "../../store/hooks";
 import { MdOutlineReportGmailerrorred } from "react-icons/md";
 import BaseModal from "./BaseModal";
+import { DeleteArg } from "../../store/api/types";
 
-const mapEntities: Record<keyof RootState, AsyncThunk<void, string, any>> = {
-  product: productService.deleteProduct,
-  category: productService.deleteCategory,
+const mapEntities: Record<keyof RootState, AsyncThunk<void, DeleteArg, any>> = {
+  product: deleteProduct,
+  category: deleteCategory,
 };
 
 interface DeleteModalProps {
@@ -28,7 +29,7 @@ const DeleteModal = ({
   const dispatch = useAppDispatch();
 
   const handleDelete = useCallback(() => {
-    dispatch(mapEntities[entity](id));
+    dispatch(mapEntities[entity]({ id, entity }));
   }, [entity, id, dispatch]);
   
   const handleCancel = useCallback(() => setOpenModal(false), [setOpenModal]);
