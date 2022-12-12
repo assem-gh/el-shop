@@ -1,6 +1,7 @@
 package com.elshop.backend.product;
 
 
+import com.elshop.backend.category.CategoryRepository;
 import com.elshop.backend.common.FakerUtils;
 import com.elshop.backend.common.KeyGenerateService;
 import com.elshop.backend.exception.ResourceNotFoundException;
@@ -19,10 +20,11 @@ import static org.mockito.Mockito.*;
 
 
 class ProductUnitTest {
-    private final ProductRepository mockRepository = mock(ProductRepository.class);
+    private final ProductRepository mockedProductRepository = mock(ProductRepository.class);
+    private final CategoryRepository mockedCategoryRepository = mock(CategoryRepository.class);
     private final KeyGenerateService utils = new KeyGenerateService();
     private final KeyGenerateService mockUtils = mock(KeyGenerateService.class);
-    private final ProductService productService = new ProductService(mockUtils, mockRepository);
+    private final ProductService productService = new ProductService(mockUtils, mockedProductRepository, mockedCategoryRepository);
 
     @Test
     void generateSlugTest() {
@@ -46,7 +48,7 @@ class ProductUnitTest {
         when(page.getNumber()).thenReturn(pageToReturn);
         when(page.hasNext()).thenReturn(true);
         when(page.getContent()).thenReturn(products);
-        when(mockRepository.findAll(PageRequest.of(pageToReturn, itemPerPage))).thenReturn(page);
+        when(mockedProductRepository.findAll(PageRequest.of(pageToReturn, itemPerPage))).thenReturn(page);
         ProductsListResponse actual = productService.getAll(pageToReturn, itemPerPage);
         assertEquals(expectedResponse, actual);
     }
@@ -60,14 +62,14 @@ class ProductUnitTest {
                 .thenReturn(productToTest.slug());
 
         productService.createNewProduct(newProductData, productToTest.id(), productToTest.images());
-        verify(mockRepository).save(productToTest);
+        verify(mockedProductRepository).save(productToTest);
 
     }
 
     @Test
     void getExistProductById() {
         Product productToTest = FakerUtils.generateFakeProduct(4);
-        when(mockRepository.findById(productToTest.id())).thenReturn(Optional.of(productToTest));
+        when(mockedProductRepository.findById(productToTest.id())).thenReturn(Optional.of(productToTest));
         Product actual = productService.getById(productToTest.id());
         assertEquals(productToTest, actual);
     }
@@ -89,8 +91,8 @@ class ProductUnitTest {
     @Test
     void deleteExistProductById() {
         Product productToTest = FakerUtils.generateFakeProduct(4);
-        when(mockRepository.findById(productToTest.id())).thenReturn(Optional.of(productToTest));
+        when(mockedProductRepository.findById(productToTest.id())).thenReturn(Optional.of(productToTest));
         productService.deleteProduct(productToTest.id());
-        verify(mockRepository).delete(productToTest);
+        verify(mockedProductRepository).delete(productToTest);
     }
 }
