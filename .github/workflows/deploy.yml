@@ -20,7 +20,7 @@ jobs:
           java-version: '19'
           distribution: 'adopt'
       - name: Build with maven
-        working-directory: .
+        working-directory: ./backend
         run: mvn -B package
       - uses: actions/upload-artifact@v2
         with:
