@@ -29,7 +29,7 @@ jobs:
           AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
           AWS_TEST_BUCKET_NAME: ${{ secrets.AWS_TEST_BUCKET_NAME }}
           CLIENT_BASE_URL: ${{ secrets.CLIENT_BASE_URL }}
-        working-directory: backend
+        working-directory: ./backend
         run: mvn -B package
       - name: Login to Docker Hub
         uses: docker/login-action@v2
