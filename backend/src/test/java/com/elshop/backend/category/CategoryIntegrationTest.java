@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 @SpringBootTest
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 class CategoryIntegrationTest {
     private final String categoriesEndpoint = "/api/categories/";
     private final MvcTestUtils mvcTestUtils;

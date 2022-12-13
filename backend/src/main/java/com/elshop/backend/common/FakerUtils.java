@@ -41,7 +41,7 @@ public class FakerUtils {
                 productRequest.title(),
                 productRequest.price(),
                 images,
-                generateCategory(),
+                generateCategory(productRequest.category()),
                 null,
                 productRequest.description()
         );
@@ -49,7 +49,6 @@ public class FakerUtils {
 
     public static ProductRequest generateFakeProductRequest(Category category) {
         String title = faker.commerce().productName();
-        // Brand brand = new Brand(faker.internet().uuid(), faker.company().name());
         String description = faker.lorem().paragraph(5);
         BigDecimal price = new BigDecimal(faker.commerce().price(1, 1000));
         return new ProductRequest(title, price, category.id(), description);
@@ -83,6 +82,10 @@ public class FakerUtils {
 
     public static Category generateCategory() {
         return new Category(faker.internet().uuid(), faker.commerce().department());
+    }
+
+    public static Category generateCategory(String id) {
+        return new Category(id, faker.commerce().department());
     }
 
     public static CategoryRequest generateCategoryRequest() {
