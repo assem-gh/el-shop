@@ -2,6 +2,7 @@ package com.elshop.backend.product;
 
 
 import com.elshop.backend.category.CategoryRepository;
+import com.elshop.backend.category.model.Category;
 import com.elshop.backend.common.FakerUtils;
 import com.elshop.backend.common.KeyGenerateService;
 import com.elshop.backend.exception.ResourceNotFoundException;
@@ -55,11 +56,15 @@ class ProductUnitTest {
 
     @Test
     void addNewProduct() {
-        ProductRequest newProductData = FakerUtils.generateFakeProductRequest();
+
+        Category category = FakerUtils.generateCategory();
+        ProductRequest newProductData = FakerUtils.generateFakeProductRequest(category);
         Product productToTest = FakerUtils.generateFakeProduct(newProductData, 5);
 
         when(mockUtils.generateSlug(newProductData.title()))
                 .thenReturn(productToTest.slug());
+        when(mockedCategoryRepository.findById(newProductData.category()))
+                .thenReturn(Optional.of(productToTest.category()));
 
         productService.createNewProduct(newProductData, productToTest.id(), productToTest.images());
         verify(mockedProductRepository).save(productToTest);

@@ -31,7 +31,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
+final
 class ProductIntegrationTest {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final String productsEndpoint = "/api/products";
@@ -52,7 +53,10 @@ class ProductIntegrationTest {
     @Test
     @DirtiesContext
     void addNewValidProduct() throws Exception {
-        ProductRequest requestProduct = FakerUtils.generateFakeProductRequest();
+
+        CategoryRequest categoryRequest = new CategoryRequest("New Category");
+        Category category = mvcTestUtils.performCategoryPostOperationExpectOk(categoryRequest);
+        ProductRequest requestProduct = FakerUtils.generateFakeProductRequest(category);
         String requestProductJson = objectMapper.writeValueAsString(requestProduct);
 
         MockMultipartFile image1 = new MockMultipartFile("images", "image1.jpg", "image/jpeg", "nice image".getBytes());
@@ -120,7 +124,8 @@ class ProductIntegrationTest {
     void addNotValidProductData() throws Exception {
         String requestProductJson = """
                 {
-                "price":33.33                       
+                "price":33.33,
+                "description":"some description"                    
                 }
                 """;
 
@@ -147,13 +152,17 @@ class ProductIntegrationTest {
     @Test
     @DirtiesContext
     void getExistProductWithId() throws Exception {
+        CategoryRequest categoryRequest = new CategoryRequest("New Category");
+        Category category = mvcTestUtils.performCategoryPostOperationExpectOk(categoryRequest);
         String requestProductJson = """
                 {
                 "title":"New 7aX 64GB",
                 "price":199.99,
-                "images":[]         
+                "images":[],  
+                "description":"some description",
+                "category":"<$>"
                 }
-                """;
+                """.replace("<$>", category.id());
 
         MockMultipartFile image1 = new MockMultipartFile("images", "image1.jpg", "image/jpeg", "nice image".getBytes());
         MockMultipartFile image2 = new MockMultipartFile("images", "image2.jpg", "image/jpeg", "another one".getBytes());
