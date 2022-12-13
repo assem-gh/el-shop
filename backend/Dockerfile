@@ -2,7 +2,7 @@ FROM openjdk:19
 
 EXPOSE 8080
 
-ADD  target/app.jar app.jar
+ADD  ./target/app.jar app.jar
 
 ENV AWS_ACCESS_KEY ${AWS_ACCESS_KEY}
 ENV AWS_SECRET_KEY ${AWS_SECRET_KEY}
