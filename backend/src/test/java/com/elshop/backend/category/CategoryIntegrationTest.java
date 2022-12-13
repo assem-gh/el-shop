@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
 class CategoryIntegrationTest {
-    private final String categoriesEndpoint = "/api/categories/";
+    private final String CATEGORIES_ENDPOINT = "/api/categories/";
     private final MvcTestUtils mvcTestUtils;
 
     @Autowired
@@ -100,7 +100,7 @@ class CategoryIntegrationTest {
         CategoryRequest requestData = new CategoryRequest(FakerUtils.faker.commerce().department());
         Category createdCategory = mvcTestUtils.performCategoryPostOperationExpectOk(requestData);
 
-        String uri = String.format("%s/%s", categoriesEndpoint, createdCategory.id());
+        String uri = String.format("%s/%s", CATEGORIES_ENDPOINT, createdCategory.id());
 
         Category getRespone = mvcTestUtils
                 .performResourceGetOperation(HttpStatus.OK, uri, new TypeReference<Category>() {
@@ -113,7 +113,7 @@ class CategoryIntegrationTest {
     @DirtiesContext
     void getCategoryByIdFail() throws Exception {
         String id = FakerUtils.faker.internet().uuid();
-        String uri = String.format("%s/%s", categoriesEndpoint, id);
+        String uri = String.format("%s/%s", CATEGORIES_ENDPOINT, id);
 
         ErrorResponse getRespone = mvcTestUtils
                 .performResourceGetOperation(HttpStatus.NOT_FOUND, uri, new TypeReference<ErrorResponse>() {
@@ -133,7 +133,7 @@ class CategoryIntegrationTest {
         CategoryRequest requestData = new CategoryRequest(FakerUtils.faker.commerce().department());
         Category createdCategory = mvcTestUtils.performCategoryPostOperationExpectOk(requestData);
 
-        String uri = String.format("%s/%s", categoriesEndpoint, createdCategory.id());
+        String uri = String.format("%s/%s", CATEGORIES_ENDPOINT, createdCategory.id());
 
         CategoryRequest updateData = new CategoryRequest("New Category");
 
@@ -157,7 +157,7 @@ class CategoryIntegrationTest {
         mvcTestUtils.performCategoryPostOperationExpectOk(requestData1);
         Category createdCategory2 = mvcTestUtils.performCategoryPostOperationExpectOk(requestData2);
 
-        String uri = String.format("%s/%s", categoriesEndpoint, createdCategory2.id());
+        String uri = String.format("%s/%s", CATEGORIES_ENDPOINT, createdCategory2.id());
 
         CategoryRequest updateDataCategory2 = new CategoryRequest(categoryName1);
 
@@ -182,7 +182,7 @@ class CategoryIntegrationTest {
     void updateNotExitCategoryFail() throws Exception {
 
         String id = FakerUtils.faker.internet().uuid();
-        String uri = String.format("%s/%s", categoriesEndpoint, id);
+        String uri = String.format("%s/%s", CATEGORIES_ENDPOINT, id);
 
         CategoryRequest updateDataCategory2 = new CategoryRequest("New Category");
 

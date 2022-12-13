@@ -4,7 +4,7 @@ import { selectProductById } from "../../store/slices/productSlice";
 import { SplitButton } from "../Button/SplitButton";
 import { Flex, Image } from "@mantine/core";
 import { RootState } from "../../store/store";
-import { selectCategoryById } from "../../store/slices/categoryslice";
+import { selectCategoryById } from "../../store/slices/categorySlice";
 import { tableData } from "../../data/tables";
 
 interface ListItemProps {
