@@ -46,6 +46,21 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: .
-          file: Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/el-shop:latest
+  deploy-to-droplet:
+    runs-on: ubuntu-20.04
+    needs: build-backend
+    steps:
+      - name: connect with SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd /el-shop/backend
+            docker stop el-shop
+            docker rm el-shop
+            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/el-shop:latest
+            docker run -d --name el-shop -p 8080:8080 ${{ secrets.DOCKER_HUB_USERNAME }}/el-shop:latest
