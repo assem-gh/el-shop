@@ -29,12 +29,8 @@ jobs:
           AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
           AWS_TEST_BUCKET_NAME: ${{ secrets.AWS_TEST_BUCKET_NAME }}
           CLIENT_BASE_URL: ${{ secrets.CLIENT_BASE_URL }}
-        working-directory: ./backend
+        working-directory: backend
         run: mvn -B package
-      - uses: actions/upload-artifact@v2
-        with:
-          name: app.jar
-          path: backend/target/app.jar
       - name: Login to Docker Hub
         uses: docker/login-action@v2
         with:
@@ -45,8 +41,8 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
-          dir: ./backend
-          file: Dockerfile
+          context: .
+          file: ./backend/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/el-shop:latest
   deploy-to-droplet:
