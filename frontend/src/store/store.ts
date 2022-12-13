@@ -1,6 +1,6 @@
 import { Action, configureStore, ThunkAction } from "@reduxjs/toolkit";
 import { productReducer } from "./slices/productSlice";
-import { categoryReducer } from "./slices/categoryslice";
+import { categoryReducer } from "./slices/categorySlice";
 import { NotificationMiddleware } from "./middleware/notificationMiddleware";
 
 export const store = configureStore({

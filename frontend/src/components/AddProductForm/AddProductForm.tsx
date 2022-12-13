@@ -23,7 +23,7 @@ import { createNewProduct } from "../../store/api/productService";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { TbFileUpload, TbPhoto, TbX } from "react-icons/all";
 import { useNavigate } from "react-router-dom";
-import { selectCategories } from "../../store/slices/categoryslice";
+import { selectCategories } from "../../store/slices/categorySlice";
 
 const schema = z.object({
   title: z.string().min(3, { message: "Name should have at least 3 letters" }),

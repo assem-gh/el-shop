@@ -32,11 +32,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
-final
 class ProductIntegrationTest {
     private final ObjectMapper objectMapper = new ObjectMapper();
-    private final String productsEndpoint = "/api/products";
-    private final String categoriesEndpoint = "/api/categories";
+    private final String PRODUCTS_ENDPOINT = "/api/products";
+    private final String CATEGORIES_ENDPOINT = "/api/categories";
 
 
     private final MockMvc mockMvc;
@@ -63,7 +62,7 @@ class ProductIntegrationTest {
         MockMultipartFile image2 = new MockMultipartFile("images", "image2.jpg", "image/jpeg", "another one".getBytes());
         MockMultipartFile data = new MockMultipartFile("data", "", "application/json", requestProductJson.getBytes());
 
-        String content = mockMvc.perform(MockMvcRequestBuilders.multipart(productsEndpoint)
+        String content = mockMvc.perform(MockMvcRequestBuilders.multipart(PRODUCTS_ENDPOINT)
                         .file(image1)
                         .file(image2)
                         .file(data)).andExpect(status().isOk())
@@ -90,7 +89,7 @@ class ProductIntegrationTest {
         MockMultipartFile file2 = new MockMultipartFile("images", "file2.jpg", "text/plain", "another one".getBytes());
         MockMultipartFile data = new MockMultipartFile("data", "", "application/json", requestProductJson.getBytes());
 
-        String response = mockMvc.perform(MockMvcRequestBuilders.multipart(productsEndpoint)
+        String response = mockMvc.perform(MockMvcRequestBuilders.multipart(PRODUCTS_ENDPOINT)
                         .file(file1)
                         .file(file2)
                         .file(data))
@@ -114,7 +113,7 @@ class ProductIntegrationTest {
         MockMultipartFile data = new MockMultipartFile("data", "", "application/json", requestProductJson.getBytes());
 
 
-        mockMvc.perform(MockMvcRequestBuilders.multipart(productsEndpoint)
+        mockMvc.perform(MockMvcRequestBuilders.multipart(PRODUCTS_ENDPOINT)
                 .file(data)).andExpect(status().isBadRequest());
     }
 
@@ -133,7 +132,7 @@ class ProductIntegrationTest {
         MockMultipartFile image2 = new MockMultipartFile("images", "image2.jpg", "image/jpeg", "another one".getBytes());
         MockMultipartFile data = new MockMultipartFile("data", "", "application/json", requestProductJson.getBytes());
 
-        String content = mockMvc.perform(MockMvcRequestBuilders.multipart(productsEndpoint)
+        String content = mockMvc.perform(MockMvcRequestBuilders.multipart(PRODUCTS_ENDPOINT)
                         .file(image1)
                         .file(image2)
                         .file(data)).andExpect(status().isBadRequest())
@@ -169,7 +168,7 @@ class ProductIntegrationTest {
         MockMultipartFile data = new MockMultipartFile("data", "", "application/json", requestProductJson.getBytes());
 
 
-        String postResponse = mockMvc.perform(MockMvcRequestBuilders.multipart(productsEndpoint)
+        String postResponse = mockMvc.perform(MockMvcRequestBuilders.multipart(PRODUCTS_ENDPOINT)
                         .file(image1)
                         .file(image2)
                         .file(data)).andExpect(status().isOk())
@@ -177,7 +176,7 @@ class ProductIntegrationTest {
 
         Product createdProduct = objectMapper.readValue(postResponse, Product.class);
 
-        String getResponse = mockMvc.perform(MockMvcRequestBuilders.get(productsEndpoint + "/" + createdProduct.id()))
+        String getResponse = mockMvc.perform(MockMvcRequestBuilders.get(PRODUCTS_ENDPOINT + "/" + createdProduct.id()))
                 .andExpect(status().isOk())
                 .andExpect(content().json(postResponse))
                 .andReturn().getResponse().getContentAsString();
@@ -190,7 +189,7 @@ class ProductIntegrationTest {
     void getNonExistProductWithId() throws Exception {
         String idToTest = "few65j453otlg";
 
-        mockMvc.perform(MockMvcRequestBuilders.get(productsEndpoint + "/" + idToTest))
+        mockMvc.perform(MockMvcRequestBuilders.get(PRODUCTS_ENDPOINT + "/" + idToTest))
                 .andExpect(status().isNotFound())
                 .andExpect(content().json("""
                         {
@@ -210,7 +209,7 @@ class ProductIntegrationTest {
         int size = 5;
 
 
-        mockMvc.perform(MockMvcRequestBuilders.get(String.format(productsEndpoint + "?page=%s&size=%s", page, size)))
+        mockMvc.perform(MockMvcRequestBuilders.get(String.format(PRODUCTS_ENDPOINT + "?page=%s&size=%s", page, size)))
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
                         {
@@ -232,7 +231,7 @@ class ProductIntegrationTest {
         int size = 5;
 
         Category category = mvcTestUtils.performMvcResourceOperation(new CategoryRequest("Mobile"), HttpMethod.POST,
-                categoriesEndpoint, HttpStatus.OK,
+                CATEGORIES_ENDPOINT, HttpStatus.OK,
                 new TypeReference<Category>() {
                 });
         ProductRequest requestProduct = FakerUtils.generateFakeProductRequest(category);
@@ -244,7 +243,7 @@ class ProductIntegrationTest {
         MockMultipartFile data = new MockMultipartFile("data", "", "application/json", requestProductJson.getBytes());
 
 
-        String createdProduct = mockMvc.perform(MockMvcRequestBuilders.multipart(productsEndpoint)
+        String createdProduct = mockMvc.perform(MockMvcRequestBuilders.multipart(PRODUCTS_ENDPOINT)
                         .file(image1)
                         .file(image2)
                         .file(data)).andExpect(status().isOk())
@@ -252,7 +251,7 @@ class ProductIntegrationTest {
                 .andReturn().getResponse().getContentAsString();
 
 
-        mockMvc.perform(MockMvcRequestBuilders.get(String.format("%s?page=%s&size=%s", productsEndpoint, page, size)))
+        mockMvc.perform(MockMvcRequestBuilders.get(String.format("%s?page=%s&size=%s", PRODUCTS_ENDPOINT, page, size)))
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
                         {

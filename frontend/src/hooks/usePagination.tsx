@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useAppSelector } from "../store/hooks";
 import { selectProductsId } from "../store/slices/productSlice";
-import { selectCategoryIds } from "../store/slices/categoryslice";
+import { selectCategoryIds } from "../store/slices/categorySlice";
 import { RootState } from "../store/store";
 
 const idsByEntity = {
