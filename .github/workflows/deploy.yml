@@ -60,4 +60,7 @@ jobs:
             docker stop el-shop
             docker rm el-shop
             docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/el-shop:latest
-            docker run -d --name el-shop -p 8080:8080 ${{ secrets.DOCKER_HUB_USERNAME }}/el-shop:latest
+            docker run -d --name el-shop --env-file ~/el-shop/environment/env.list  -p 8080:8080 ${{ secrets.DOCKER_HUB_USERNAME }}/el-shop:latest
+            
+            
+
