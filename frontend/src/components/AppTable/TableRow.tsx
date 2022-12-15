@@ -2,7 +2,7 @@ import React from "react";
 import { useAppSelector } from "../../store/hooks";
 import { selectProductById } from "../../store/slices/productSlice";
 import { SplitButton } from "../Button/SplitButton";
-import { Flex, Image } from "@mantine/core";
+import { Flex, Image, Spoiler } from "@mantine/core";
 import { RootState } from "../../store/store";
 import { selectCategoryById } from "../../store/slices/categorySlice";
 import { tableData } from "../../data/tables";
@@ -11,6 +11,7 @@ interface ListItemProps {
   id: string;
   selectedColumns: string[];
   entity: keyof RootState;
+  search: string;
 }
 
 const selectData = {
@@ -18,9 +19,18 @@ const selectData = {
   category: selectCategoryById,
 };
 
-const TableRow = ({ id, selectedColumns, entity }: ListItemProps) => {
+const TableRow = ({ id, selectedColumns, entity, search }: ListItemProps) => {
   const data = useAppSelector((state) => selectData[entity](state, id));
+  const query = search.toLowerCase().trim();
+
   if (!data) return null;
+  const matchQuery = Object.values(data).some(
+    (value) => typeof value === "string" && value.toLowerCase().includes(query)
+  );
+  console.log(matchQuery);
+  console.log(query);
+  if (!matchQuery) return null;
+
   type ItemKey = keyof typeof data;
   const mapFieldToKey = tableData[entity];
 
@@ -28,6 +38,14 @@ const TableRow = ({ id, selectedColumns, entity }: ListItemProps) => {
     if (colName === "Category") {
       // @ts-ignore
       return data["category"]["name"];
+    }
+    if (colName === "Description") {
+      return (
+        <Spoiler maxHeight={55} showLabel=" more" hideLabel="Hide">
+          {/*@ts-ignore*/}
+          {data["description"]}
+        </Spoiler>
+      );
     }
     if (colName === "Product") {
       return (
