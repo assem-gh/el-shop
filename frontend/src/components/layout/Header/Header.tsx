@@ -1,18 +1,16 @@
 import React, { Dispatch, SetStateAction } from "react";
 import {
   ActionIcon,
-  Avatar,
   Box,
   Burger,
   Group,
   MediaQuery,
   TextInput,
-  useMantineColorScheme,
 } from "@mantine/core";
-import { TbMoonStars, TbSearch, TbSun } from "react-icons/tb";
-import { FiBell } from "react-icons/fi";
+import { TbSearch } from "react-icons/tb";
 
 import useStyles from "./header.style";
+import { UserMenu } from "../../Menu/UserMenu";
 
 interface HeaderProps {
   opened: boolean;
@@ -20,9 +18,6 @@ interface HeaderProps {
 }
 
 const Header = ({ opened, setOpened }: HeaderProps) => {
-  const { colorScheme, toggleColorScheme } = useMantineColorScheme();
-  const dark = colorScheme === "dark";
-
   const { classes } = useStyles();
 
   return (
@@ -49,18 +44,7 @@ const Header = ({ opened, setOpened }: HeaderProps) => {
 
           <Group ml="auto">
             <Group ml={50} spacing={16}>
-              <ActionIcon
-                variant="outline"
-                color={dark ? "yellow" : "blue"}
-                onClick={() => toggleColorScheme()}
-                title="Toggle color scheme"
-              >
-                {dark ? <TbSun size={22} /> : <TbMoonStars size={22} />}
-              </ActionIcon>
-              <FiBell size={24} />
-              <Avatar color="cyan" radius="xl">
-                AD
-              </Avatar>
+              <UserMenu />
             </Group>
           </Group>
         </Group>
