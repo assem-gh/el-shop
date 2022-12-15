@@ -96,7 +96,7 @@ const AddProductForm = () => {
   };
 
   return (
-    <Container size="sm" px="xs">
+    <Container fluid size="sm" px={0}>
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <LoadingOverlay visible={loading} />
         <Paper withBorder p="md" radius="md">

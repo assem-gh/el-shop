@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react";
 import PageHeader from "../../../components/PageHeader/PageHeader";
 import { MdAdd } from "react-icons/md";
-import { Button } from "@mantine/core";
+import { Button, Container } from "@mantine/core";
 import AddProductForm from "../../../components/AddProductForm/AddProductForm";
 import AddCategoryModal from "../../../components/Modal/AddCategoryModal";
 
@@ -12,7 +12,7 @@ const AddProductPage = () => {
     [setOpenModal]
   );
   return (
-    <>
+    <Container size="md">
       <PageHeader
         title="Add New Product"
         actions={
@@ -23,7 +23,7 @@ const AddProductPage = () => {
       />
       <AddProductForm />
       <AddCategoryModal openModal={openModal} setOpenModal={setOpenModal} />
-    </>
+    </Container>
   );
 };
 

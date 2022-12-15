@@ -65,7 +65,7 @@ const SelectColumn = ({
       <Menu.Target>
         <UnstyledButton className={classes.control}>
           <Group spacing="xs">
-            <Text>Display Columns</Text>
+            <Text>Columns</Text>
           </Group>
           <TbChevronDown size={16} className={classes.icon} />
         </UnstyledButton>
