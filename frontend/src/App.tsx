@@ -11,9 +11,10 @@ import AddProductPage from "./pages/dashboard/Product/AddProductPage";
 import ProductsListPage from "./pages/dashboard/Product/ProductListPage";
 import CategoryListPage from "./pages/dashboard/Category/CategoryListPage";
 import { NotificationsProvider } from "@mantine/notifications";
+import { useKeycloak } from "@react-keycloak/web";
 import FourOhFour from "./pages/FourOhFour/FourOhFour";
 import Home from "./pages/dashboard/Home";
-import { useKeycloak } from "@react-keycloak/web";
+
 
 function App() {
   const [colorScheme, setColorScheme] = useState<ColorScheme>("light");
@@ -25,6 +26,7 @@ function App() {
   if (!initialized) {
     return <LoadingOverlay visible />;
   }
+
   return (
     <ColorSchemeProvider
       colorScheme={colorScheme}
