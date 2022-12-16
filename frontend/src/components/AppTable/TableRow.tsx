@@ -27,8 +27,7 @@ const TableRow = ({ id, selectedColumns, entity, search }: ListItemProps) => {
   const matchQuery = Object.values(data).some(
     (value) => typeof value === "string" && value.toLowerCase().includes(query)
   );
-  console.log(matchQuery);
-  console.log(query);
+
   if (!matchQuery) return null;
 
   type ItemKey = keyof typeof data;

@@ -12,6 +12,7 @@ import ProductsListPage from "./pages/dashboard/Product/ProductListPage";
 import CategoryListPage from "./pages/dashboard/Category/CategoryListPage";
 import { NotificationsProvider } from "@mantine/notifications";
 import FourOhFour from "./pages/FourOhFour/FourOhFour";
+import Home from "./pages/dashboard/Home";
 
 function App() {
   const [colorScheme, setColorScheme] = useState<ColorScheme>("light");
@@ -35,6 +36,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="admin" element={<Dashboard />}>
+              <Route index element={<Home />} />
               {<Route path="products/add" element={<AddProductPage />} />}
               <Route path="products/list" element={<ProductsListPage />} />
               <Route path="categories/list" element={<CategoryListPage />} />
