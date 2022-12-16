@@ -53,23 +53,6 @@ const Header = ({ opened, setOpened }: HeaderProps) => {
           <Group ml="auto">
             <Group ml={50} spacing={16}>
               <UserMenu />
-              <ActionIcon
-                variant="outline"
-                color={dark ? "yellow" : "blue"}
-                onClick={() => toggleColorScheme()}
-                title="Toggle color scheme"
-              >
-                {dark ? <TbSun size={22} /> : <TbMoonStars size={22} />}
-              </ActionIcon>
-              <FiBell size={24} />
-              {keycloak.authenticated ? (
-                <Button onClick={() => keycloak.logout()}>Logout</Button>
-              ) : (
-                <Button onClick={() => keycloak.login()}>Login</Button>
-              )}
-              <Avatar color="cyan" radius="xl">
-                AD
-              </Avatar>
             </Group>
           </Group>
         </Group>
