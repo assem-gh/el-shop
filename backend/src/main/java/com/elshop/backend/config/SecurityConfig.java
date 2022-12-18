@@ -40,7 +40,6 @@ public class SecurityConfig {
                     return config;
                 })
                 .and()
-                .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/api/**").hasRole("ADMIN")
                 .and().oauth2ResourceServer().jwt().jwtAuthenticationConverter(jwtAuthenticationConverter);

@@ -6,7 +6,6 @@ import {
   Group,
   MediaQuery,
   TextInput,
-  useMantineColorScheme,
 } from "@mantine/core";
 import { TbSearch } from "react-icons/tb";
 
@@ -20,9 +19,6 @@ interface HeaderProps {
 }
 
 const Header = ({ opened, setOpened }: HeaderProps) => {
-  const { colorScheme, toggleColorScheme } = useMantineColorScheme();
-  const dark = colorScheme === "dark";
-
   const { classes } = useStyles();
 
   return (
@@ -46,7 +42,6 @@ const Header = ({ opened, setOpened }: HeaderProps) => {
               />
             </MediaQuery>
           </Group>
-
           <Group ml="auto">
             <Group ml={50} spacing={16}>
               <UserMenu />

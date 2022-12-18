@@ -10,8 +10,9 @@ import {
   useMantineColorScheme,
 } from "@mantine/core";
 import { TbLogout, TbMoonStars, TbSettings, TbTrash } from "react-icons/tb";
+import { useKeycloak } from "@react-keycloak/web";
 
-const useStyles = createStyles((theme) => ({
+const useStyles = createStyles(() => ({
   userMenuBtn: {
     display: "flex",
     alignItems: "center",
@@ -23,9 +24,14 @@ export const UserMenu = () => {
   const [, setUserMenuOpened] = useState(false);
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
 
-  const userName = "Admin";
+  const { keycloak } = useKeycloak();
+  const userName = keycloak.idTokenParsed?.preferred_username;
 
   const { classes } = useStyles();
+
+  const onLogout = () => {
+    keycloak.logout();
+  };
 
   return (
     <Menu
@@ -68,7 +74,9 @@ export const UserMenu = () => {
           Dark Theme
         </Menu.Item>
 
-        <Menu.Item icon={<TbLogout size={14} />}>Logout</Menu.Item>
+        <Menu.Item onClick={onLogout} icon={<TbLogout size={14} />}>
+          Logout
+        </Menu.Item>
 
         <Divider />
 
