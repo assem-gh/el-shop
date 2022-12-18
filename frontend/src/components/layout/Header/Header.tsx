@@ -3,17 +3,13 @@ import {
   ActionIcon,
   Box,
   Burger,
-  Button,
   Group,
   MediaQuery,
   TextInput,
-  useMantineColorScheme,
 } from "@mantine/core";
-import { TbMoonStars, TbSearch, TbSun } from "react-icons/tb";
-import { FiBell } from "react-icons/fi";
+import { TbSearch } from "react-icons/tb";
 
 import useStyles from "./header.style";
-import { useKeycloak } from "@react-keycloak/web";
 import { UserMenu } from "../../Menu/UserMenu";
 
 interface HeaderProps {
@@ -22,10 +18,6 @@ interface HeaderProps {
 }
 
 const Header = ({ opened, setOpened }: HeaderProps) => {
-  const { colorScheme, toggleColorScheme } = useMantineColorScheme();
-  const dark = colorScheme === "dark";
-
-  const { keycloak } = useKeycloak();
   const { classes } = useStyles();
 
   return (
