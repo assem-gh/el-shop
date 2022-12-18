@@ -10,7 +10,7 @@ import {
 import { TbSearch } from "react-icons/tb";
 
 import useStyles from "./header.style";
-
+import { useKeycloak } from "@react-keycloak/web";
 import { UserMenu } from "../../Menu/UserMenu";
 
 interface HeaderProps {
@@ -42,6 +42,7 @@ const Header = ({ opened, setOpened }: HeaderProps) => {
               />
             </MediaQuery>
           </Group>
+
           <Group ml="auto">
             <Group ml={50} spacing={16}>
               <UserMenu />
