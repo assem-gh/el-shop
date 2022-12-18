@@ -15,19 +15,30 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 class KeycloackRoleConverterTest {
+
+    private final KeycloackRoleConverter converter = new KeycloackRoleConverter();
+
     @Test
     void testConvert() {
-        KeycloackRoleConverter converter = new KeycloackRoleConverter();
 
         Jwt jwt = mock(Jwt.class);
         Map<String, Object> claims = new HashMap<>();
         claims.put("realm_access", Map.of("roles", List.of("ADMIN", "USER")));
-        when(jwt.getClaims()).thenReturn(claims);
+        when(jwt.getClaims().get("realm_access")).thenReturn(claims);
 
         Collection<GrantedAuthority> authorities = converter.convert(jwt);
-
         assertEquals(2, Objects.requireNonNull(authorities).size());
         assertTrue(authorities.contains(new SimpleGrantedAuthority("ROLE_ADMIN")));
         assertTrue(authorities.contains(new SimpleGrantedAuthority("ROLE_USER")));
+    }
+
+    @Test
+    public void testConvertRealmAccessNull() {
+        // Setup
+        Jwt jwt = mock(Jwt.class);
+        Map<String, Object> claims = new HashMap<>();
+        when(jwt.getClaims()).thenReturn(claims);
+
+        assertEquals(0, Objects.requireNonNull(converter.convert(jwt)).size());
     }
 }
