@@ -33,10 +33,22 @@ class KeycloackRoleConverterTest {
     }
 
     @Test
-    public void testConvertRealmAccessNull() {
+    void testConvertRealmAccessNull() {
         // Setup
         Jwt jwt = mock(Jwt.class);
         Map<String, Object> claims = new HashMap<>();
+        when(jwt.getClaims()).thenReturn(claims);
+
+        assertEquals(0, Objects.requireNonNull(converter.convert(jwt)).size());
+    }
+
+    @Test
+    void testConvertRealmAccessEmpty() {
+        // Setup
+        Jwt jwt = mock(Jwt.class);
+        Map<String, Object> claims = new HashMap<>();
+
+        claims.put("realm_access", new HashMap<>());
         when(jwt.getClaims()).thenReturn(claims);
 
         assertEquals(0, Objects.requireNonNull(converter.convert(jwt)).size());
