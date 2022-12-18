@@ -13,15 +13,19 @@ import CategoryListPage from "./pages/dashboard/Category/CategoryListPage";
 import { NotificationsProvider } from "@mantine/notifications";
 import FourOhFour from "./pages/FourOhFour/FourOhFour";
 import Home from "./pages/dashboard/Home";
+import { useKeycloak } from "@react-keycloak/web";
 
 function App() {
   const [colorScheme, setColorScheme] = useState<ColorScheme>("light");
   const toggleColorScheme = (value?: ColorScheme) =>
     setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
-  const initialized = true;
+
+  const { initialized } = useKeycloak();
+
   if (!initialized) {
-    return <LoadingOverlay visible loader="" />;
+    return <LoadingOverlay visible />;
   }
+
   return (
     <ColorSchemeProvider
       colorScheme={colorScheme}

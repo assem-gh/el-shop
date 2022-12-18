@@ -10,6 +10,7 @@ import {
 import { TbSearch } from "react-icons/tb";
 
 import useStyles from "./header.style";
+import { useKeycloak } from "@react-keycloak/web";
 import { UserMenu } from "../../Menu/UserMenu";
 
 interface HeaderProps {

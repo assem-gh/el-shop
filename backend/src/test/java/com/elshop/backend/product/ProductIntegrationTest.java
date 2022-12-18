@@ -37,10 +37,7 @@ class ProductIntegrationTest {
     private final String PRODUCTS_ENDPOINT = "/api/products";
     private final String CATEGORIES_ENDPOINT = "/api/categories";
 
-
     private final MockMvc mockMvc;
-
-
     private final MvcTestUtils mvcTestUtils;
 
     @Autowired
